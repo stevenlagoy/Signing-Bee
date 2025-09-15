@@ -1,0 +1,32 @@
+{
+  "name": "signing-bee",
+  "version": "1.0.0",
+  "description": "ASL learning and games site",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stevenlagoy/Signing-Bee.git"
+  },
+  "keywords": [
+    "ASL",
+    "sign-language",
+    "learning",
+    "games",
+    "learning-games"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stevenlagoy/Signing-Bee/issues"
+  },
+  "homepage": "https://github.com/stevenlagoy/Signing-Bee#readme",
+  "devDependencies": {
+    "@eslint/js": "^9.35.0",
+    "eslint": "^9.35.0",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^16.4.0"
+  }
+}
