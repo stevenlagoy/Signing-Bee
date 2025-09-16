@@ -1,0 +1,53 @@
+name: Signing-Bee CI
+
+on:
+  push:
+    branches: ['*']
+  pull_request:
+    branches: ['*']
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      # 1. Checkout repo
+      - uses: actions/checkout@v3
+
+      # 2. Set up Node.js
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # 3. Install backend dependencies
+      - name: Install backend dependencies
+        working-directory: ./backend
+        run: npm install
+
+      # 4. Install frontend dependencies
+      - name: Install frontend dependencies
+        working-directory: ./signing-bee
+        run: npm install
+
+      # 5. Run backend tests (Jest + Supertest)
+      - name: Run backend tests
+        working-directory: ./backend
+        run: npm test
+
+      # 6. Run frontend tests (Jest)
+      - name: Run frontend tests
+        working-directory: ./signing-bee
+        run: npm test
+
+      # 7. Run Cypress E2E tests
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm start --prefix signing-bee
+          wait-on: http://localhost:3000
+          wait-on-timeout: 60
