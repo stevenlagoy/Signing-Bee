@@ -1,20 +1,58 @@
-# Created by https://www.toptal.com/developers/gitignore/api/react
-# Edit at https://www.toptal.com/developers/gitignore?templates=react
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
 
-### react ###
-.DS_*
-*.log
+# Build artifacts
+dist/
+build/
+.cache/
+coverage/
+.vite/
+.next/
+out/
+
+# Logs
 logs
-**/*.backup.*
-**/*.back.*
+*.log
+*.log.*
 
-node_modules
-bower_components
+# Local env / secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-*.sublime*
+# Database
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+pgdata/
+dump.sql
 
-psd
-thumb
-sketch
+# OS/IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
 
-# End of https://www.toptal.com/developers/gitignore/api/react
+# Testing
+cypress/screenshots/
+cypress/videos/
+jest-test-results.json
+junit.xml
+test-results.xml
+
+# Misc
+*.tgz
+*.tar.gz
+*.zip
