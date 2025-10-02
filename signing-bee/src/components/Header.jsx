@@ -1,15 +1,27 @@
 import React from "react";
+import { ReactComponent as Logo } from "../assets/signing-bee-logo.svg";
+import { ReactComponent as MenuIcon } from "../assets/3-dot-menu.svg";
+import styles from "./Header.module.scss";
 
 export default function Header() {
   return (
-    <header className="flex items-center justify-between bg-yellow-100 p-4 shadow-md rounded-2xl">
-      {/* Logo area */}
-      <div className="flex items-center space-x-3">
-        <div className="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center shadow">
-          {/* Replace with logo image */}
-          <span className="text-2xl font-bold text-white">🐝</span>
+    <header className={styles.header}>
+      <div className={styles.inner}>
+        <a href="/asl-reference" className={styles.aslRef}>
+          ASL Reference
+        </a>
+        <div className={styles.brand}>
+          <h1>Signing Bee</h1>
+          <Logo alt="Signing Bee Logo" />
         </div>
-        <h1 className="text-2xl font-bold text-gray-800">Signing Bee</h1>
+
+        <button
+          type="button"
+          className={styles.dropMenu}
+          aria-label="Open menu"
+        >
+          <MenuIcon />
+        </button>
       </div>
     </header>
   );
