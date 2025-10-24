@@ -1,28 +1,34 @@
-import React from "react";
+import { Link } from "react-router-dom";
 import { ReactComponent as Logo } from "../assets/signing-bee-logo.svg";
 import { ReactComponent as MenuIcon } from "../assets/3-dot-menu.svg";
+import { ReactComponent as DefaultPFP } from "../assets/default-pfp.svg"
 import styles from "./Header.module.scss";
 
 export default function Header() {
   return (
     <header className={styles.header}>
-      <div className={styles.inner}>
-        <a href="/asl-reference" className={styles.aslRef}>
+      <Link to="/" className={styles.brand}>
+        <Logo alt="Signing Bee Logo" width="50" height="50" />
+        <h1 className={styles.siteName}>Signing Bee</h1>
+      </Link>
+      <nav className={styles.navLinks}>
+        <Link to="/asl-reference" className="aslReferenceLink">
           ASL Reference
-        </a>
-        <div className={styles.brand}>
-          <h1>Signing Bee</h1>
-          <Logo alt="Signing Bee Logo" />
-        </div>
+        </Link>
+        <Link to="/practice" className="practiceLink">
+          Practice
+        </Link>
+        <Link to="/about" className="aboutLink">
+          About
+        </Link>
+      </nav>
 
-        <button
-          type="button"
-          className={styles.dropMenu}
-          aria-label="Open menu"
-        >
-          <MenuIcon />
-        </button>
-      </div>
+      <Link to="/profile" className={styles.profileMenu}>
+        <div className={styles.userProfile}>
+          <h2 className="user-name">User Name</h2>
+          <DefaultPFP alt="Default user profile picture" width="50" height="50" viewBox="0 0 340 340" />
+        </div>
+      </Link>
     </header>
   );
 }
