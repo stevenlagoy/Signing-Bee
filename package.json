@@ -2,7 +2,7 @@
   "name": "signing-bee",
   "version": "1.0.0",
   "description": "ASL learning and games site",
-  "main": "index.js",
+  "main": "index.jsx",
   "scripts": {
     "test": "jest"
   },

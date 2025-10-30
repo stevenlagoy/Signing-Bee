@@ -1,32 +1,38 @@
-import { Routes, Route, BrowserRouter } from "react-router-dom";
-import Home from "./pages/Home";
-import About from "./pages/About";
-import ASLReference from "./pages/ASLReference";
-import Learn from "./pages/Practice";
-import Profile from "./pages/Profile";
-import NotFound from "./pages/NotFound";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import styles from "./App.css";
+import "./App.scss";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Header from "./components/Header/Header";
+import Footer from "./components/Footer/Footer";
+import HomePage from "./pages/Home/Home";
+import AboutPage from "./pages/About/About";
+import ASLReferencePage from "./pages/ASLReference/ASLReference";
+import PracticePage from "./pages/Practice/Practice";
+import ProfilePage from "./pages/Profile/Profile";
+import NotFoundPage from "./pages/NotFound/NotFound";
+
+const Layout = ({ children }) => (
+  <div className="screen">
+    <Header />
+    <main>
+      {children}
+    </main>
+    <Footer />
+  </div>
+);
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <div className="screen">
-        <Header />
-        <main className={styles.main}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/asl-reference" element={<ASLReference />} />
-            <Route path="/practice" element={<Learn />} />
-            {/* Consider using those dynamic page names we talked about on the 15th for user profiles. */}
-            <Route path="/profile" element={<Profile />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </BrowserRouter>
+    <Router>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/asl-reference" element={<ASLReferencePage />} />
+          <Route path="/practice" element={<PracticePage />} />
+          {/* Consider using dynamic page names for user profiles. */}
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </Layout>
+    </Router>
   );
 }

@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
-import { ReactComponent as Logo } from "../assets/signing-bee-logo.svg";
-import { ReactComponent as MenuIcon } from "../assets/3-dot-menu.svg";
-import { ReactComponent as DefaultPFP } from "../assets/default-pfp.svg"
+// These should be put inside of src/assets or ideally public/
+import { ReactComponent as Logo } from "./signing-bee-logo.svg";
+import { ReactComponent as MenuIcon } from "./3-dot-menu.svg";
+import { ReactComponent as DefaultPFP } from "./default-pfp.svg"
 import styles from "./Header.module.scss";
 
 export default function Header() {
