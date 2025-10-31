@@ -1,7 +1,6 @@
-import './styles/index.scss';
+import '@/styles/index.scss';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import reportWebVitals from './services/reportWebVitals';
 import App from "./App"
 
 createRoot(document.getElementById('root')).render(
@@ -9,5 +8,3 @@ createRoot(document.getElementById('root')).render(
     <App />
   </StrictMode>
 );
-
-reportWebVitals();
