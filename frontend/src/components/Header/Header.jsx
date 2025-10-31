@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import styles from "./Header.module.scss";
+import ThemeToggle from "../ThemeToggle/ThemeToggle";
 
 export default function Header() {
   return (
@@ -19,6 +20,8 @@ export default function Header() {
           About
         </Link>
       </nav>
+
+    <ThemeToggle />
 
       <Link to="/profile" className={styles.profileMenu}>
         <div className={styles.userProfile}>
