@@ -1,7 +1,7 @@
 @use '/src/styles/colors' as *;
 
 .header {
-  position: fixed;
+  position: sticky;
   display: flex;
   box-sizing: border-box;
   width: 100vw;
