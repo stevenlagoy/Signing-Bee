@@ -1,0 +1,40 @@
+import styles from "./ThemeToggle.module.scss";
+import { useEffect, useState } from "react";
+
+function ThemeToggle() {
+    const [theme, setTheme] = useState(
+        // https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme
+        localStorage.getItem("theme") ||
+            (window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light")
+    );
+
+    useEffect(() => {
+        document.documentElement.setAttribute("data-theme", theme);
+        localStorage.setItem("theme", theme);
+    }, [theme]);
+
+    const toggleTheme = () => {
+        setTheme(theme === "light" ? "dark" : "light");
+        document.body.setAttribute("data-theme", theme === "light" ? "dark" : "light");
+    }
+
+    return (
+        <div className={ styles.themeToggle } onClick={ toggleTheme } title="Click to change light mode / dark mode theme">
+            <div className={ `${styles.toggleSlider} ${styles[theme]}` }></div>
+            <div className={ styles.icon }>
+                <svg viewBox="0 0 512 512">
+                    <path d="M224,480l0,-50.902c10.377,1.906 21.072,2.902 32,2.902c10.928,0 21.623,-0.996 32,-2.902l0,50.902c0,17.673 -14.327,32 -32,32c-17.673,0 -32,-14.327 -32,-32Zm162.108,-37.324l-37.181,-37.18c18.296,-11.397 34.347,-26.059 47.339,-43.171l35.096,35.096c12.497,12.497 12.497,32.758 0,45.255c-12.496,12.497 -32.758,12.497 -45.254,0Zm-316.784,-56.568l37.18,-37.181c11.397,18.296 26.059,34.347 43.171,47.339l-35.096,35.096c-12.497,12.497 -32.759,12.497 -45.255,0c-12.497,-12.496 -12.497,-32.758 0,-45.254Zm186.676,-2.108c70.692,0 128,-57.308 128,-128c0,-70.692 -57.308,-128 -128,-128c-70.692,0 -128,57.308 -128,128c0,70.692 57.308,128 128,128Zm224,-96l-50.902,0c1.906,-10.377 2.902,-21.072 2.902,-32c0,-10.928 -0.996,-21.623 -2.902,-32l50.902,0c17.673,0 32,14.327 32,32c0,17.654 -14.297,31.97 -32,32Zm-397.098,0l-50.902,0c-17.673,0 -32,-14.327 -32,-32c0,-17.673 14.327,-32 32,-32l50.902,0c-1.906,10.377 -2.902,21.072 -2.902,32c0,10.907 0.992,21.583 2.902,32Zm31.677,-207.363l35.096,35.097c-17.112,12.992 -31.774,29.043 -43.171,47.339l-37.18,-37.181c-12.497,-12.497 -12.497,-32.758 0,-45.255c12.497,-12.496 32.758,-12.496 45.255,0Zm316.783,33.942l-35.096,35.096c-12.992,-17.112 -29.043,-31.774 -47.339,-43.171l37.181,-37.18c12.496,-12.497 32.758,-12.497 45.254,0c12.497,12.496 12.497,32.758 0,45.255Zm-143.362,-82.579c0,-17.673 -14.327,-32 -32,-32c-17.673,0 -32,14.327 -32,32l0,50.902c10.377,-1.906 21.072,-2.902 32,-2.902c10.928,0 21.623,0.996 32,2.902l0,-50.902Z" />
+                </svg>
+            </div>
+            <div className={ styles.icon }>
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 11.807A9.002 9.002 0 0 1 10.049 2a9.942 9.942 0 0 0-5.12 2.735c-3.905 3.905-3.905 10.237 0 14.142 3.906 3.906 10.237 3.905 14.143 0a9.946 9.946 0 0 0 2.735-5.119A9.003 9.003 0 0 1 12 11.807z" />
+                </svg>
+            </div>
+        </div>
+    );
+}
+
+export default ThemeToggle;

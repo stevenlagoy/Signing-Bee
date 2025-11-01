@@ -1,0 +1,104 @@
+@use '/src/styles/colors' as *;
+
+.header {
+  position: sticky;
+  display: flex;
+  box-sizing: border-box;
+  width: 100vw;
+  align-items: center;
+  justify-content: space-between;
+  background: $blue;
+  color: $white;
+  margin: 0;
+  gap: 5%;
+  padding: 1rem 2rem;
+  height: 5rem;
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    cursor: pointer;
+    color: $white !important;
+    text-decoration: underline;
+
+    .siteName {
+      margin: 0;
+      font-size: 2.25em;
+      color: $white;
+    }
+  }
+
+  .navLinks {
+    display: flex;
+    flex: 1;
+    gap: 1%;
+    align-items: center;
+    font-size: 1.25rem;
+
+    a {
+      display: flex;
+      flex: 1;
+      max-width: 10rem;
+      background-color: transparent;
+      border: 0.5rem solid transparent;
+      border-radius: 50px;
+      font-weight: bold;
+      text-decoration: none;
+      justify-content: center;
+      text-align: center;
+      color: $white !important;
+
+      &:hover {
+        background-color: $blue-highlight;
+        color: $orange;
+      }
+    }
+  }
+
+  .profileMenu {
+    
+    cursor: pointer;
+    height: 4em;
+    background: transparent;
+    border: none;
+
+    text-decoration: none;
+
+    &:hover {
+      h2 {
+        color: $orange;
+      }
+      svg path {
+        fill: $orange;
+      }
+    }
+
+    .userProfile {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1em;
+      color: $white;
+    }
+
+    svg path {
+      fill: $white;
+      stroke: none;
+    }
+  }
+
+}
+
+.profileMenu {
+  svg {
+    width: 30px;
+    height: 30px;
+    color: $white;
+    transition: fill 0.2s ease;
+  }
+
+  &:hover svg {
+    color: $orange;
+  }
+}

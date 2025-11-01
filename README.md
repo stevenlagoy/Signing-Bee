@@ -56,41 +56,20 @@ cd Signing-Bee/signing-bee
 ### 2. **Install dependencies**
 Make sure you have [**Node.js**](https://nodejs.org/en/download/) (>=18) installed.
 
-Use the setup scripts to download other dependencies.
+From the project root, run:
+```
+cd frontend && npm i
+```
 
-#### Windows (Powershell)
-
-1. Open **Powershell** as an administrator.
-2. Navigate to the repository root:
-```powershell
-cd C:\path\to\Signing-Bee
+And again from the project root, run:
 ```
-3. Run the setup script with temporary execution policy bypass
-```powershell
-powershell -ExecutionPolicy Bypass -File .\setup.ps1
+cd backend && npm i
 ```
-This will install frontend and backend dependencies, Jest, Supertest, and Cypress.
-
-#### Linux / macOS (Bash)
-
-1. Open a terminal and navigate to the repository root:
-```bash
-cd /path/to/Signing-Bee
-```
-2. Make the script executable:
-```bash
-chmod +x setup.sh
-```
-3. Run the script:
-```bash
-./setup.sh
-```
-This will install frontend and backend dependencies, Jest, Supertest, and Cypress.
 
 ### 3. **Run the development server**
 - Start the frontend:
 ```
-cd signing-bee && npm start
+cd frontend && npm start
 ```
 - Start the backend:
 ```
