@@ -1,7 +1,7 @@
 import styles from "./Practice.module.scss";
-import WebcamSample from "@/components/Camera/Camera";
-import Dropdown from "@/components/Dropdown/Dropdown";
-import Timer from "@/components/Timer/Timer";
+import WebcamSample from "../../components/Camera/Camera";
+import Dropdown from "../../components/Dropdown/Dropdown";
+import Timer from "../../components/Timer/Timer";
 
 export default function Practice() {
     return (
