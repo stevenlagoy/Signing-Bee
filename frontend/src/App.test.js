@@ -6,6 +6,6 @@ import App from './App';
 
 test('renders header with site name', () => {
   render(<App />);
-  const headerElement = screen.getByText(/^Signing Bee$/i); // Test was failing due to finding two mataches instead of one so I tightened the regex
+  const headerElement = screen.getByRole('heading', { name: /^Signing Bee$/i });
   expect(headerElement).toBeInTheDocument();
 });
