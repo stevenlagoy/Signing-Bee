@@ -1,0 +1,154 @@
+.webcam {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    position: relative;
+}
+
+.canvas {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 0;
+    pointer-events: none;
+}
+
+.prediction {
+    text-align: center;
+    margin: 10px auto;
+    padding: 10px;
+    max-width: 700px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+}
+
+.status {
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.liveDetection {
+    margin: 5px 0;
+    padding: 8px;
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.detectedLetter {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    color: #333;
+
+    strong {
+        color: #666;
+        font-size: 0.85rem;
+    }
+}
+
+.confidenceBar {
+    margin-top: 5px;
+}
+
+.confidenceLabel {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    margin-bottom: 4px;
+    color: #666;
+
+    .threshold {
+        color: #007bff;
+        font-weight: bold;
+    }
+}
+
+.progressBar {
+    position: relative;
+    width: 100%;
+    height: 20px;
+    background: #e9ecef;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.progressFill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: linear-gradient(90deg, #ffc107 0%, #28a745 100%);
+    transition: width 0.2s ease-out;
+    border-radius: 10px;
+
+    &.locked {
+        background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+        animation: pulse 0.5s ease-in-out infinite alternate;
+    }
+}
+
+@keyframes pulse {
+    from {
+        opacity: 0.8;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.thresholdMarker {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #007bff;
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+    z-index: 10;
+    pointer-events: none;
+    transform: translateX(-1px);
+}
+
+.holdMessage {
+    margin-top: 4px;
+    font-size: 0.75rem;
+    color: #28a745;
+    font-weight: bold;
+    animation: fadeInBounce 0.3s ease-out;
+}
+
+@keyframes fadeInBounce {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.resultText {
+    font-size: 1.1rem;
+    margin-top: 8px;
+    padding: 8px;
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    word-wrap: break-word;
+    min-height: 40px;
+
+    strong {
+        color: #666;
+        font-size: 0.75rem;
+    }
+}
+
+.SSButtons {
+    text-align: center;
+    margin-top: 20px;
+}

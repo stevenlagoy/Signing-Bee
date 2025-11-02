@@ -1,0 +1,42 @@
+.divContainer {
+  position: relative;
+  display: inline-block;
+  align-self: flex-start;
+}
+
+.button {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  min-width: 200px;
+  text-align: center;
+  background: $orange;
+  color: $black;
+  font-weight: bold;
+  border: none;
+  padding: 8px 40px;
+  cursor: pointer;
+  &:hover { filter: brightness(1.1); }
+}
+
+.chevron {
+  width: 15px;
+  height: 15px;
+  transition: transform 0.2s ease;
+}
+
+.rotated {
+  transform: rotate(180deg);
+}
+
+.menu {
+  position: absolute;
+  text-align: center;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: $white;
+  border: 2px solid $orange;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+}

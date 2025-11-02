@@ -1,0 +1,121 @@
+-- DB.JS
+
+BEGIN;
+
+DROP INDEX IF EXISTS idx_scores_userid;
+DROP INDEX IF EXISTS idx_scores_created_at;
+DROP TABLE IF EXISTS scores;
+DROP TABLE IF EXISTS auth_log;
+DROP TABLE IF EXISTS sessions;
+DROP TABLE IF EXISTS users;
+
+-- CREATE TABLES
+
+-- Users: core account info
+CREATE TABLE users (
+    user_id SERIAL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    user_firstname VARCHAR(255),
+    user_lastname VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Sessions / Tokens for persistent login
+CREATE TABLE sessions (
+	session_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+    token TEXT NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Audit Log for sign-ins
+CREATE TABLE auth_log (
+	log_id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(user_id) ON DELETE SET NULL,
+    action VARCHAR(50) NOT NULL, -- LOGIN_SUCCESS, LOGIN_FAIL
+    ip_address INET,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Scores to track user scores
+CREATE TABLE scores (
+    score_id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+    points INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+-- If dataset becomes too large, use indices
+CREATE INDEX idx_scores_userid ON scores(user_id);
+CREATE INDEX idx_scores_created_at ON scores(created_at);
+
+CREATE OR REPLACE FUNCTION get_leaderboard(period TEXT, limit_count INT DEFAULT 10)
+    RETURNS TABLE (
+    	username VARCHAR,
+    	total_points BIGINT
+    ) AS $$
+    BEGIN
+    	RETURN QUERY
+    	SELECT u.username, SUM(s.points) AS total_points
+    	FROM scores s
+    	JOIN users u on u.user_id = s.user_id
+    	WHERE (
+    		(period = 'week'  AND s.created_at >= NOW() - INTERVAL '7 days') OR
+    		(period = 'month' AND s.created_at >= date_trunc('month', NOW())) OR
+    		(period = 'year'  AND s.created_at >= date_trunc('year', NOW())) OR
+    		(period = 'all')
+        )
+    	GROUP BY u.user_id, u.username
+    	ORDER BY total_points DESC
+    	LIMIT limit_count;
+	END;
+	$$ LANGUAGE plpgsql;
+
+COMMIT;
+BEGIN;
+
+INSERT INTO users(email, username, password_hash)
+	VALUES ('stevenlagoy@gmail.com', 'Steve', 'SomeEncryptedHashValue');
+
+INSERT INTO sessions (user_id, token, expires_at)
+	VALUES (1, 'randomly_generated_token', NOW() + INTERVAL '7 days');
+
+INSERT INTO auth_log (user_id, action, ip_address)
+	VALUES(1, 'LOGIN_SUCCESS', '123.4.567.89');
+
+INSERT INTO scores (user_id, points)
+    VALUES (1, 2500);
+
+-- Lookup by email
+SELECT user_id, password_hash
+	FROM users
+	WHERE email = 'stevenlagoy@gmail.com';
+
+-- Validate a session token
+SELECT u.user_id, u.username, u.email
+	FROM sessions s
+	JOIN users u ON u.user_id = s.user_id
+	WHERE s.token = 'generated_token'
+		AND s.expires_at > NOW();
+
+-- Login by username and password
+SELECT user_id, password_hash
+	FROM users
+	WHERE username = 'Steve';
+-- (validate username and password on backend)
+INSERT INTO sessions (user_id, token, expires_at)
+	VALUES (1, 'generated_token', NOW() + INTERVAL '7 days')
+	RETURNING session_id, token, expires_at;
+INSERT INTO auth_log (user_id, action, ip_address)
+	VALUES (1, 'LOGIN_SUCCESS', '123.4.567.89');
+
+-- Get top 25 from all-time leaderboard
+SELECT * FROM get_leaderboard('all', 25);
+
+-- Get top 10 from weekly leaderboard
+SELECT * FROM get_leaderboard('week', 10);
+
+ROLLBACK;

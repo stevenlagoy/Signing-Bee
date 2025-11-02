@@ -1,0 +1,46 @@
+@use '/src/styles/colors' as *;
+
+%timerButtons
+{
+    //color
+    background-color: $orange;
+
+    //size
+    width: 100px;
+    height: 50px;
+    
+    //font
+    font: bold 1rem "Fira Sans", sans-serif;
+    font-size: 20px;
+    
+    //round corners
+    border-radius: 5%;
+
+    &:hover {
+        background-color: adjust-color($color: $orange, $lightness: 10%);
+    }
+    &:active {
+        background-color: adjust-color($color: $orange, $lightness: -10%);
+    }
+}
+
+.timerSpacing
+{
+    //spacing
+    display: flexbox;
+    margin-right: 25px;
+    margin-left: 25px;
+    margin: 0;
+    padding: 0px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.timerStartStop{
+    @extend %timerButtons;
+}
+
+.timerReset{
+    @extend %timerButtons;
+}

@@ -1,0 +1,30 @@
+html, body, #root, #screen, main {
+    margin: 0;
+    transition: background-color 0.3s ease, color 0.3s ease;
+
+    h1 {
+        font: bolder 2rem "Fira Sans", sans-serif;
+        color: $text-1;
+    }
+
+    h2 {
+        font: bold 1.5rem "Fira Sans", sans-serif;
+        color: $text-1;
+    }
+
+    h3 {
+        font: bold 1rem "Fira Sans", sans-serif;
+        color: $text-2;
+    }
+
+    p {
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        color: $text-2;
+    }
+
+    a {
+        font: bold 1rem "Fira Sans", sans-serif;
+        color: $blue-highlight;
+    }
+
+}

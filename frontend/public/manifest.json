@@ -1,0 +1,15 @@
+{
+  "short_name": "Signing Bee",
+  "name": "Signing Bee: Learn ASL Online",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "43x43",
+      "type": "image/x-icon"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#233B6B",
+  "background_color": "#E5E5E5"
+}

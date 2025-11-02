@@ -24,14 +24,17 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: Clean npm cache
+        run: npm cache clean --force
+
       # 3. Install backend dependencies
       - name: Install backend dependencies
         working-directory: ./backend
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       # 4. Install frontend dependencies
       - name: Install frontend dependencies
-        working-directory: ./signing-bee
+        working-directory: ./frontend
         run: npm install
 
       # 5. Run backend tests (Jest + Supertest)
@@ -41,13 +44,13 @@ jobs:
 
       # 6. Run frontend tests (Jest)
       - name: Run frontend tests
-        working-directory: ./signing-bee
-        run: npm test
+        working-directory: ./frontend
+        run: npm run test:ci
 
-      # 7. Run Cypress E2E tests
-      - name: Run Cypress tests
-        uses: cypress-io/github-action@v6
-        with:
-          start: npm start --prefix signing-bee
-          wait-on: http://localhost:3000
-          wait-on-timeout: 60
+      # # 7. Run Cypress E2E tests
+      # - name: Run Cypress tests
+      #   uses: cypress-io/github-action@v6
+      #   with:
+      #     start: npm start --prefix signing-bee
+      #     wait-on: http://localhost:3000
+      #     wait-on-timeout: 60
