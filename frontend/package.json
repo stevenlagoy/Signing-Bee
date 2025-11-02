@@ -20,6 +20,7 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test": "jest",
+    "test:ci": "jest --config jest.config.cjs --runInBand",
     "test:watch": "jest --watch",
     "test:e2e": "cypress open",
     "test:e2e:headless": "cypress run"
