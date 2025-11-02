@@ -45,7 +45,7 @@ jobs:
       # 6. Run frontend tests (Jest)
       - name: Run frontend tests
         working-directory: ./frontend
-        run: npm test --config jest.config.cjs --runInBand
+        run: npm jest -- --config jest.config.cjs --runInBand
 
       # # 7. Run Cypress E2E tests
       # - name: Run Cypress tests
