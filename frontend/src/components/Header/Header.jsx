@@ -25,7 +25,7 @@ export default function Header() {
 
       <Link to="/profile" className={styles.profileMenu}>
         <div className={styles.userProfile}>
-          <h2 className="user-name">User Name</h2>
+          <h2 className={styles.userName}>User Name</h2>
           <img src="/default-pfp.svg" alt="Default user profile picture" width="50" height="50" viewBox="0 0 340 340" />
         </div>
       </Link>
