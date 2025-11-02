@@ -1,89 +1,60 @@
-//Harrison Niswander
-//Signing Bee
-//11-1-25
-//timer.jsx
+// Timer.jsx
+// Signing Bee
+// Harrison Niswander
+// November 01, 2025
 
-import React, { useState, useEffect, useRef } from 'react';
-import styles from "./timer.module.scss";
+import styles from "./Timer.module.scss";
+import { useState, useEffect, useRef } from 'react';
 
-// keeps track of seconds
-let c=1;
-
-function timer() {
+function Timer() {
     const [time, setTime] = useState(0);
     const [isRunning, setIsRunning] = useState(false);
     const intervalRef = useRef(null);
-    const [sec, setSec] = useState(0);
-    const [buttonText, setButtonText] = useState('Start');
 
     //Start the timer
     const handleStartStop = () => {
-        if (!isRunning) 
-        {
+        if (!isRunning) {
             setIsRunning(true);
-            //setIsRunning2(true);
 
             intervalRef.current = setInterval(() => {
                 setTime(prevTime => prevTime + 10);
-            }, 10); // seconds
+            }, 10);
 
-            setButtonText('Stop');
         }
-
-        if(isRunning)
-        {
+        if(isRunning) {
             setIsRunning(false);
             clearInterval(intervalRef.current);
-
-            setButtonText('Resume');
         }
     };
 
-    const handleReset = () =>
-    {
+    const handleReset = () => {
         //reset time
-        setTime(prevTime => 0);
-        setSec(0);
-        c = 1;
+        setTime(0);
 
         //stop time
         setIsRunning(false);
         clearInterval(intervalRef.current);
-        setButtonText('Start');
-
     }
 
     //clear 
     useEffect(() => {
-        return () => {
-        clearInterval(intervalRef.current);
-        };
+        return () => clearInterval(intervalRef.current);
     }, []);
     
-
     // Format time for display
-    let seconds = Math.floor(time / 60000);
-    let millisecond = Math.floor((time % 60000) / 10);
+    const minutes = Math.floor(time / 60000);
+    const seconds = Math.floor(time / 1000) % 60;
 
-    if (millisecond >= 100*c) {
-        millisecond = millisecond % 100;
-        setSec(prev => prev + 1);
-
-        c++;
-    }
-        
-    millisecond = millisecond % 100;
-
-    let formattedSeconds = String(sec).padStart(2, '0');
-    let formattedMilliseconds = String(millisecond).padStart(2, '0');
+    const formattedMinutes = String(minutes).padStart(2, '0');
+    const formattedSeconds = String(seconds).padStart(2, '0');
 
     return (
         <div className={styles.timerSpacing}>
-            <h1>{formattedSeconds}.{formattedMilliseconds}</h1>
-            <button className={styles.timerStartStop} onClick={handleStartStop}>{buttonText}</button>
+            <h1>{formattedMinutes}:{formattedSeconds}</h1>
+            <button className={styles.timerStartStop} onClick={handleStartStop}>{isRunning ? 'Stop' : time === 0 ? 'Start' : 'Resume'}</button>
             <button className={styles.timerReset} onClick={handleReset}>Reset</button>
         </div>
   );
 }
 
-export default timer;
+export default Timer;
