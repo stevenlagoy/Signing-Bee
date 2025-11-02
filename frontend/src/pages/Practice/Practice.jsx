@@ -1,5 +1,6 @@
 import WebcamSample from "../../components/Camera/Camera";
 import Dropdown from "../../components/Dropdown/Dropdown";
+import Timer from "../../components/Timer/timer.jsx";
 import styles from "./Practice.module.scss";
 
 export default function Practice() {
@@ -19,6 +20,10 @@ export default function Practice() {
                 <Dropdown trigger="Wiki" className={styles.wiki}>
                     <p>Iframe Here</p>
                 </Dropdown>
+            </div>
+
+            <div>
+                <Timer />
             </div>
             <WebcamSample />
         </div>
