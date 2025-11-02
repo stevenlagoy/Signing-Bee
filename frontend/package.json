@@ -5,6 +5,8 @@
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
     "@testing-library/user-event": "^13.5.0",
+    "eslint": "^8.57.1",
+    "eslint-config-react-app": "^7.0.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-router-dom": "^7.9.4",
@@ -28,6 +30,11 @@
       "react-app/jest"
     ]
   },
+  "jest": {
+    "transform": {
+      "^.+\\.[jt]sx?$": "babel-jest"
+    }
+  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -40,6 +47,10 @@
       "last 1 safari version"
     ]
   },
+  "presets": [
+    "@babel/preset-env",
+    "@babel/preset-react"
+  ],
   "devDependencies": {
     "@babel/core": "^7.28.5",
     "@babel/preset-env": "^7.28.5",
@@ -49,7 +60,7 @@
     "@vitejs/plugin-react": "^5.1.0",
     "babel-jest": "^30.2.0",
     "cypress": "^15.5.0",
-    "jest": "^27.5.1",
+    "jest": "^30.2.0",
     "sass": "^1.93.2",
     "vite-plugin-svgr": "^4.5.0"
   }
