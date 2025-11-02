@@ -1,16 +1,15 @@
 module.exports = {
   testEnvironment: "jsdom",
   setupFiles: ["<rootDir>/jest.setup.js"],
+  setupFilesAfterEnv: ['@testing-library/jest-dom'],
   transform: { 
     "^.+\\.[jt]sx?$": "babel-jest" 
   },
-  moduleFileExtensions: ["js", "jsx"],
+  moduleFileExtensions: ["js", "jsx", "json"],
   moduleNameMapper: {
-    "^@/(.*)$": "<rootDir>/src/$1",
     "\\.(css|scss|sass)$": "identity-obj-proxy",
-    "\\.(jpg|jpeg|png|gif|svg)$": "<rootDir>/__mocks__/fileMock.js"
+    "^@/(.*)": "<rootDir>/src/$1"
   },
-  transformIgnorePatterns: [
-    "node_modules/(?!(your-esm-package)/)"
-  ]
+  moduleDirectories: ["node_modules", "src"],
+  testMatch: ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[jt]s?(x)"]
 };
