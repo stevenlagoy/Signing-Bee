@@ -30,7 +30,7 @@ jobs:
       # 3. Install backend dependencies
       - name: Install backend dependencies
         working-directory: ./backend
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       # 4. Install frontend dependencies
       - name: Install frontend dependencies
