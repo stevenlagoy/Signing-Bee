@@ -138,7 +138,9 @@ const config = {
   // setupFiles: [],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
-  // setupFilesAfterEnv: [],
+  // Modified by Zack McGill
+  // Points jest to actually use our setupTests.js file
+  setupFilesAfterEnv: ['<rootDir>/src/setupTests.js'],
 
   // The number of seconds after which a test is considered as slow and reported as such in the results.
   // slowTestThreshold: 5,
@@ -195,6 +197,15 @@ const config = {
 
   // Whether to use watchman for file crawling
   // watchman: true,
+
+  // Added by Zack McGill
+  // This should allow jest to handle our scss imports which it normally can't do
+  // Also added one to allow it to handle image imports which normally would fail
+  // This was coupled with a few library dependencies as well
+  moduleNameMapper: {
+    '\\.(css|scss|sass)$': 'identity-obj-proxy',
+    '\\.(svg|png|jpg|jpeg|gif)$': 'jest-transform-stub',
+  },
 };
 
 module.exports = config;
