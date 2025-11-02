@@ -1,15 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <link rel="manifest" href="/manifest.json" />
-    <title>Signing Bee</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/index.jsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <link rel="manifest" href="/manifest.json" />
+  <title>Signing Bee</title>
+  <!-- Load TFLite via CDN as recommended in the docs -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script> -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-cpu"></script> -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-tflite/dist/tf-tflite.min.js"></script> -->
+  <!-- Load TensorFlow.js for the simple model -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.11.0/dist/tf.min.js"></script>
+  <!-- Load TFLite for the complex model (if we go back to it later) -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-tflite/dist/tf-tflite.min.js"></script>
+
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/index.jsx"></script>
+</body>
+
 </html>
