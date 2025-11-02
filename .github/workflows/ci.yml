@@ -42,7 +42,7 @@ jobs:
       # 6. Run frontend tests (Jest)
       - name: Run frontend tests
         working-directory: ./frontend
-        run: npm test
+        run: npm test -- --runInBand
 
       # # 7. Run Cypress E2E tests
       # - name: Run Cypress tests

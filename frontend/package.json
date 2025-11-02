@@ -31,8 +31,14 @@
     ]
   },
   "jest": {
+    "testEnvironment": "jsdom",
     "transform": {
       "^.+\\.[jt]sx?$": "babel-jest"
+    },
+    "moduleFileExtensions": ["js", "jsx"],
+    "moduleNameMapper": {
+      "\\.(css|scss|sass)$": "identity-obj-proxy",
+      "^@/(.*)$": "<rootDir>/src/$1"
     }
   },
   "browserslist": {
