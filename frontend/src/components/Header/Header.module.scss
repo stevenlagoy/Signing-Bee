@@ -23,9 +23,11 @@
     text-decoration: underline;
 
     .siteName {
-      margin: 0;
-      font-size: 2.25em;
+      margin: 0 !important;
+      font-size: 2.25em !important;
       color: $white !important;
+      white-space: nowrap;
+      height: auto
     }
   }
 
@@ -48,6 +50,9 @@
       justify-content: center;
       text-align: center;
       color: $white !important;
+      font-size: 1.125em !important;
+      white-space: nowrap;
+      text-overflow: ellipsis;
 
       &:hover {
         background-color: $blue-highlight;
@@ -62,6 +67,9 @@
     height: 4em;
     background: transparent;
     border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     text-decoration: none;
 
@@ -80,6 +88,10 @@
       justify-content: center;
       gap: 1em;
       color: $white;
+
+      h2 {
+        margin: 0 !important;
+      }
 
       .userName {
         color: $white !important;
