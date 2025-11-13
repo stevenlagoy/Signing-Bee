@@ -1,6 +1,7 @@
-const express = require('express');
-const router = express.Router();
-const db = require('../db');
+import { Router } from 'express';
+import db from '../db/db.js';
+
+const router = Router();
 
 // Get all users
 router.get('/', async (req, res) => {
@@ -14,4 +15,4 @@ router.get('/', async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;

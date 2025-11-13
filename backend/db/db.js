@@ -1,5 +1,7 @@
-const { Pool } = require('pg');
-require('dotenv').config();
+import { Pool } from 'pg';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const pool = new Pool({
     user: process.env.DB_USER || 'postgres',
@@ -88,4 +90,4 @@ pool.query(`
 `).then(() => console.log('Database ready'))
   .catch(err => console.error('Error creating users table', err.stack));
 
-module.exports = pool;
+export default pool;
