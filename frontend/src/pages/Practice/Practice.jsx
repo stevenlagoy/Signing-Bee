@@ -1,3 +1,4 @@
+import React from "react";
 import styles from "./Practice.module.scss";
 import WebcamSample from "../../components/Camera/Camera";
 import Dropdown from "../../components/Dropdown/Dropdown";
