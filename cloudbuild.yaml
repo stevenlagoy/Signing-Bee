@@ -24,5 +24,7 @@ steps:
       '--platform', 'managed',
       '--allow-unauthenticated'
     ]
+options:
+  logging: CLOUD_LOGGING_ONLY
 images:
   - $_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO/$SHORT_SHA
