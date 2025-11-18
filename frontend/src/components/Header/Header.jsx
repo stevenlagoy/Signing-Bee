@@ -2,8 +2,19 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styles from "./Header.module.scss";
 import ThemeToggle from "../ThemeToggle/ThemeToggle";
+import LoginDropDown from "../../components/Dropdown/LoginDropDown";
+import {useLogout} from '../../hooks/useLogout.jsx'
+import {useAuthContext} from '../../hooks/useAuthContext.jsx'
 
 export default function Header() {
+  const {logout} = useLogout()
+    const {user} = useAuthContext()
+  
+    const handleClick = () =>
+    {
+      logout()
+    }
+  
   return (
     <header className={styles.header}>
       <Link to="/" className={styles.brand}>
@@ -23,13 +34,29 @@ export default function Header() {
       </nav>
 
     <ThemeToggle />
+      <LoginDropDown trigger="Profile">
+        <Link to="/profile" className={styles.profileMenu}>
+          <div className={styles.userProfile}>
+            <h2 className={styles.userName}>User Name</h2>
+            
+          </div>
+        </Link>
+        {!user && (
+          <div>
+            <Link to="/login">Log In</Link>
+            <div></div>
+            <Link to="/signup">Sign Up</Link>
+          </div>
+        )}
+                    
+        {user && (
+          <div>
+            <span>{user.email}</span>
+            <p onClick={handleClick}>Log Out</p>
+          </div>
+        )}
 
-      <Link to="/profile" className={styles.profileMenu}>
-        <div className={styles.userProfile}>
-          <h2 className={styles.userName}>User Name</h2>
-          <img src="/default-pfp.svg" alt="Default user profile picture" width="50" height="50" />
-        </div>
-      </Link>
+      </LoginDropDown>
     </header>
   );
 }

@@ -8,6 +8,8 @@ import ASLReferencePage from "./pages/ASLReference/ASLReference";
 import PracticePage from "./pages/Practice/Practice";
 import ProfilePage from "./pages/Profile/Profile";
 import NotFoundPage from "./pages/NotFound/NotFound";
+import Login from "./pages/Login/Login";
+import Signup from "./pages/Signup/Signup";
 
 const Layout = ({ children }) => (
   <div className="screen">
@@ -31,6 +33,8 @@ export default function App() {
           {/* Consider using dynamic page names for user profiles. */}
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="*" element={<NotFoundPage />} />
+          <Route path ="/login" element={<Login />} />
+          <Route path ="/signup" element={<Signup />} />
         </Routes>
       </Layout>
     </Router>

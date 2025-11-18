@@ -15,4 +15,17 @@ router.get('/', async (req, res) => {
     }
 });
 
+//Login & signup
+//obtain express
+const express = require('express')
+
+//controller functions
+const {signupUser, loginUser} = require('../controllers/userController.js')
+
+//login route 
+router.post('/login', loginUser)
+
+//signup route
+router.post('/signup', signupUser)
+
 export default router;

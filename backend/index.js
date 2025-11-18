@@ -16,6 +16,10 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(FRONTEND_BUILD_PATH));
 
+//routes
+//const userRoutes = './routes/user.js';
+//app.use('/api/user', userRoutes);
+
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok" });
 });
