@@ -1,4 +1,4 @@
-import './Login.module.scss';
+import styles from './Login.module.scss';
 import {useState} from 'react';
 import {useLogin} from '../../hooks/useLogin.jsx'
 
@@ -14,25 +14,31 @@ const login = () => {
   }
 
   return (
-    <div>
-        <form className = "login" onSubmit={handleSubmit}>
-          <h3>Log in</h3>
+    <div className={styles.container}>
+        <form className = {styles.login} onSubmit={handleSubmit}>
+          <h3 className={styles.title}>Log in</h3>
 
-          <label>Email:</label>
+          <label className={styles.labels}>Email:   </label>
           <input 
+            className={styles.inputs}
             type="email"
             onChange={(e) => setEmail(e.target.value)}
             value={email}
           />
 
-          <label>Password:</label>
+          <br/>
+
+          <label className={styles.labels}>Password:  </label>
           <input 
+            className={styles.inputs}
             type="password"
             onChange={(e) => setPassword(e.target.value)}
             value={password}
           />
 
-          <button disabled={isLoading}>Log in</button>
+          <br/><br/>
+
+          <button disabled={isLoading} className={styles.buttons}>Log in</button>
           {error && <div classname="error">{error}</div>}
 
         </form>

@@ -41,11 +41,11 @@ export default function Header() {
           </div>
         </Link>
         {!user && (
-          <div>
+          <nav className={styles.navLinks}>
             <Link to="/login">Log In</Link>
             <div></div>
             <Link to="/signup">Sign Up</Link>
-          </div>
+          </nav>
         )}
 
         {user && (
