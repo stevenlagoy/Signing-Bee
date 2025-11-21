@@ -14,7 +14,10 @@ Content-Type: application/json
 
 {
   "username": "steven",
-  "email": "steven@example.com"
+  "email": "steven@example.com",
+  "password_hash": "hashedpassword123",
+  "user_firstname": "Steven",
+  "user_lastname": "Smith"
 }
 
 
