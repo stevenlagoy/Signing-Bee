@@ -1,49 +1,136 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import { dirname, join } from "path";
-import { fileURLToPath } from "url";
-
-import usersRouter from "./routes/users.js";
-import adminRouter from "./routes/admin.js";
+import express from 'express';
+import dotenv from 'dotenv';
+import pkg from 'pg';
+import bcrypt from 'bcrypt';
 
 dotenv.config();
+const { Pool } = pkg;
+
+const pool = new Pool({
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  database: process.env.DB_NAME,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  ssl: { rejectUnauthorized: false },
+});
 
 const app = express();
-let server;
 const PORT = process.env.PORT || 4000;
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const FRONTEND_BUILD_PATH = join(__dirname, "../frontend/dist");
 
-app.use(cors());
+// Middleware to parse JSON
 app.use(express.json());
-app.use(express.static(FRONTEND_BUILD_PATH));
 
-app.use('/api/users', usersRouter);
-app.use('/api/admins', adminRouter);
-
-app.get("/api/health", (req, res) => {
-  res.json({ status: "ok" });
-});
-
-// Let React handle routing for any non-API request.
-app.get(/.*/, (req, res, next) => {
-  if (req.path.startsWith("/api")) {
-    return next();
+// Test route
+app.get('/time', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT NOW()');
+    res.json({ serverTime: result.rows[0] });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Database query failed' });
   }
-  res.sendFile(join(FRONTEND_BUILD_PATH, "index.html"));
 });
 
-// Only start server if this file is run directly
-if (process.env.NODE_ENV !== "test") {
-  server = app.listen(PORT, (err) => {
-    if (err) {
-      console.error(`Failed to start server on port ${PORT}:`, err.message);
-      process.exit(1);
-    }
-    console.log(`Server running on port ${PORT}`);
-  });
-}
+// USER ROUTES ------------------------------------------------------------------------------------
 
-export { server };
-export default app;
+// Create a new user
+app.post('/users', async (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password) return res.status(400).json({ error: 'Missing username or password' });
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const result = await pool.query(
+      'INSERT INTO "Users" (username, password) VALUES ($1, $2) RETURNING id, username, created_at',
+      [username, hashedPassword]
+    );
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to create user' });
+  }
+});
+
+// Get all users (without passwords)
+app.get('/users', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT id, username, created_at FROM "Users"');
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch users' });
+  }
+});
+
+// Get a single user by id
+app.get('/users/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query('SELECT id, username, created_at FROM "Users" WHERE id = $1', [id]);
+    if (result.rows.length === 0) return res.status(404).json({ error: 'User not found' });
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch user' });
+  }
+});
+
+// SCORE ROUTES -----------------------------------------------------------------------------------
+
+// Create a new score
+app.post('/scores', async (req, res) => {
+  const { user, value } = req.body;
+  if (!user || value === undefined) return res.status(400).json({ error: 'Missing user or value' });
+
+  try {
+    const result = await pool.query(
+      'INSERT INTO "Score" ("user", value) VALUES ($1, $2) RETURNING *',
+      [user, value]
+    );
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to create score' });
+  }
+});
+
+// Get all scores
+app.get('/scores', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM "Score" ORDER BY created_at DESC');
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch scores' });
+  }
+});
+
+// Get scores for a specific user
+app.get('/scores/user/:userId', async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const result = await pool.query('SELECT * FROM "Score" WHERE "user" = $1 ORDER BY value DESC', [userId]);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch user scores' });
+  }
+});
+
+// Get the high score for a user
+app.get('/scores/user/:userId/high', async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const result = await pool.query('SELECT MAX(value) AS high_score FROM "Score" WHERE "user" = $1', [userId]);
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch high score' });
+  }
+});
+
+// START SERVER -----------------------------------------------------------------------------------
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
