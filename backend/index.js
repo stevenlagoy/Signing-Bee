@@ -19,6 +19,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(FRONTEND_BUILD_PATH));
 
+app.use('/api/users', usersRouter);
+app.use('/api/admins', adminRouter);
+
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok" });
 });
