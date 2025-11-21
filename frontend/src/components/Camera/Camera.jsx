@@ -8,7 +8,7 @@ import { drawConnectors, drawLandmarks } from '@mediapipe/drawing_utils';
 import aslModel from '../../services/aslModelLandmarks'; // Landmark-based model (better)
 import styles from "./Camera.module.scss";
 
-export default function WebcamSample() {
+export default function WebcamSample({ onLetterDetected, oneStart = 0 }) {
 
     const [video, setVideo] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
@@ -23,12 +23,33 @@ export default function WebcamSample() {
     const cameraRef = useRef(null);
     const frameCountRef = useRef(0);
     const isRecordingRef = useRef(false);
+    const lastTextRef = useRef('');
 
     const videoConstraints = {
         width: 640,
         height: 480,
         facingMode: "user"
     }
+
+    //sends each newly accepted letter to be handled
+    useEffect(() => {
+        if (!onLetterDetected) return;
+
+        const prev = lastTextRef.current || '';
+        const curr = predictedText || '';
+
+        if (curr.length > prev.length) {
+            const newPart = curr.slice(prev.length);
+
+            for (const ch of newPart) {
+                if (ch && ch !== ' ') {
+                    onLetterDetected(ch);
+                }
+            }
+        }
+
+        lastTextRef.current = curr;
+    }, [predictedText, onLetterDetected]);
 
     useEffect(() => {
         // Load the ASL model when component mounts
@@ -47,6 +68,13 @@ export default function WebcamSample() {
     useEffect(() => {
         isRecordingRef.current = isRecording;
     }, [isRecording]);
+
+    useEffect(() => {
+        if (oneStart > 0) {
+            startCam();
+            startRecording();
+        }
+    }, [oneStart]);
 
     const onResults = useCallback(async (results) => {
         if (!canvasRef.current) return;
@@ -193,6 +221,7 @@ export default function WebcamSample() {
         setCurrentLetter('');
         setConfidence(0);
         frameCountRef.current = 0;
+        lastTextRef.current = '';
     };
 
     const stopRecording = () => {
