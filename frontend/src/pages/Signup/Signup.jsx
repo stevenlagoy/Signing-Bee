@@ -1,4 +1,4 @@
-//import './styles/signup_style/signup.css';
+import styles from './Signup.module.scss';
 import {useState} from 'react';
 import {useSignup} from '../../hooks/useSignup.jsx'
 
@@ -14,25 +14,31 @@ const signup = () => {
   }
 
   return (
-    <div>
-        <form className = "signup" onSubmit={handleSubmit}>
-          <h3>Sign up</h3>
+    <div className={styles.container}>
+        <form className = {styles.signup} onSubmit={handleSubmit}>
+          <h3 className={styles.title}>Sign up</h3>
 
-          <label>Email:</label>
+          <label className={styles.labels}>Email:   </label>
           <input 
+            className={styles.inputs}
             type="email"
             onChange={(e) => setEmail(e.target.value)}
             value={email}
           />
 
-          <label>Password:</label>
+          <br/>
+
+          <label className={styles.labels}>Password:    </label>
           <input 
+            className={styles.inputs}
             type="password"
             onChange={(e) => setPassword(e.target.value)}
             value={password}
           />
 
-          <button disabled={isLoading}>Sign up</button>
+          <br/><br/>
+
+          <button disabled={isLoading} className={styles.buttons}>Sign up</button>
           {error && <div className ="error">{error}</div>}
 
         </form>

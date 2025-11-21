@@ -38,15 +38,14 @@ export default function Header() {
         <Link to="/profile" className={styles.profileMenu}>
           <div className={styles.userProfile}>
             <h2 className={styles.userName}>User Name</h2>
-            
           </div>
         </Link>
         {!user && (
-          <div>
+          <nav className={styles.navLinks}>
             <Link to="/login">Log In</Link>
             <div></div>
             <Link to="/signup">Sign Up</Link>
-          </div>
+          </nav>
         )}
                     
         {user && (
