@@ -4,6 +4,9 @@ import dotenv from "dotenv";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 
+import usersRouter from "./routes/users.js";
+import adminRouter from "./routes/admin.js";
+
 dotenv.config();
 
 const app = express();
