@@ -2,24 +2,17 @@ import express from 'express';
 import dotenv from 'dotenv';
 import pkg from 'pg';
 import bcrypt from 'bcrypt';
+import cors from "cors";
+import { pool } from "./db/pool.js";
 
 dotenv.config();
-const { Pool } = pkg;
-
-const pool = new Pool({
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  database: process.env.DB_NAME,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  ssl: { rejectUnauthorized: false },
-});
 
 const app = express();
 const PORT = process.env.PORT || 4000;
 
 // Middleware to parse JSON
 app.use(express.json());
+app.use(cors());
 
 // Test route
 app.get('/time', async (req, res) => {
