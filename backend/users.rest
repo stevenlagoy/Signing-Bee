@@ -1,0 +1,26 @@
+@host = http://localhost:4000
+
+###
+
+POST {{host}}/users
+Content-Type: application/json
+
+{
+    "username": "insightlionanniehall",
+    "password": "f3237473b4db8a1fbf48fcff7655b32d6c0d80dfa0fc957321cc5aae489e1352"
+}
+
+###
+
+POST {{host}}/scores
+Content-Type: application/json
+
+{
+    "value": "7342",
+    "user" : "14"
+}
+
+###
+
+
+###

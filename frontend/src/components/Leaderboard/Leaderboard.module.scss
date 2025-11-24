@@ -1,0 +1,25 @@
+.leaderboard {
+
+    padding: 0 0.5em 0 1.75em;
+    
+    li::marker {
+        color: $gray-000;
+        font-weight: bolder;
+    }
+
+    .leaderboardEntry {
+
+        width: stretch;
+        
+        .name {
+            font-size: clamp(0.6rem, 1em, 0.9rem);
+            text-overflow: ellipsis;
+            color: $gray-040;
+        }
+
+        .score {
+            margin: 0 !important;
+            color: $gray-000;
+        }
+    }
+}
