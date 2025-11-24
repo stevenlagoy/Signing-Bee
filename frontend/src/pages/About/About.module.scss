@@ -1,6 +1,45 @@
-.creatorsCards {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2em;
-    margin-bottom: 4em;
+.about {
+    
+    > h1 {
+        background-color: $blue;
+        color: white;
+        padding: 0.5em 0 0.5em 0;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1em;
+        border-radius: 1em;
+        width: 50%;
+        justify-self: center;
+        margin-bottom: 1em !important;
+    }
+
+    > div {
+        background-color: $background-2;
+        padding: 1em;
+        margin-bottom: 1em;
+        border-radius: 1em;
+        transition: background 0.3s ease;
+
+        &:hover {
+            background-color: $background-3;
+        }
+
+        h2 {
+            margin: 0.5em 0 !important;
+        }
+
+        a {
+            color: blue;
+            &:active { color: aqua; }
+        }
+    }
+
+    .creatorsCards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2em;
+        margin-bottom: 4em;
+    }
 }
