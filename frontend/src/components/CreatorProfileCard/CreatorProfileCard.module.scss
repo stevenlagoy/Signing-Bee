@@ -1,0 +1,14 @@
+.creatorProfile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .name {
+        font-size: 1.5em !important;
+    }
+    .picture {
+        aspect-ratio: 1 / 1;
+        width: 15em;
+        height: 15em;
+        border: 2px solid black;
+    }
+}

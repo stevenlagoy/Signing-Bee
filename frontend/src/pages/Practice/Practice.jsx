@@ -1,15 +1,15 @@
+import React from "react";
 import styles from "./Practice.module.scss";
-import WebcamSample from "../../components/Camera/Camera";
-import Dropdown from "../../components/Dropdown/Dropdown";
-import Timer from "../../components/Timer/Timer";
+import WebcamSample from "../../components/Camera";
+import Dropdown from "../../components/Dropdown";
+import Timer from "../../components/Timer";
+import Leaderboard from "../../components/Leaderboard";
 
 export default function Practice() {
     return (
         <div>
             <div className={styles.DIDContainer}>
-                <Dropdown trigger="Leaderboard" className={styles.leaderboard}>
-                    <p>Names Here</p>
-                </Dropdown>
+                <Leaderboard />
                 <div className={styles.introBox}>
                 <h1>Practice Mode</h1>
                 <p>

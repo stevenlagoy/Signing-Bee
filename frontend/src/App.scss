@@ -8,8 +8,8 @@ div.screen {
 
 main {
   display: block;
-  overflow: auto;
-  padding: 0;
+  justify-content: center;
+  padding: 2em;
   flex: 1;
   background-color: $background-1;
   min-height: 0;
