@@ -16,6 +16,9 @@
     --text-2: #{$gray-020};
     --text-3: #{$gray-050};
 
+    --link-1: blue;
+    --link-2: aqua;
+
     --border-1: #{$gray-000};
     --border-2: #{$gray-050};
 }
@@ -34,6 +37,9 @@
     --text-2: #{$gray-080};
     --text-3: #{$gray-050};
 
+    --link-1: aqua;
+    --link-2: blue;
+
     --border-1: #{$gray-100};
     --border-2: #{$gray-050};
 }
@@ -50,6 +56,9 @@ $background-5: var(--background-5);
 $text-1: var(--text-1);
 $text-2: var(--text-2);
 $text-3: var(--text-3);
+
+$link-1: var(--link-1);
+$link-2: var(--link-2);
 
 $border-1: var(--border-1);
 $border-2: var(--border-2);

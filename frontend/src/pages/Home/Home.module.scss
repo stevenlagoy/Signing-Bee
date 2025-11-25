@@ -31,8 +31,8 @@
         }
 
         a {
-            color: blue;
-            &:active { color: aqua; }
+            color: $link-1;
+            &:active { color: $link-2; }
         }
 
         button {
@@ -49,7 +49,10 @@
         gap: 2em;
         align-items: center;
         justify-content: center;
+
         img {
+            height: 100%;
+            max-width: 33%;
             border: 2px solid black;
         }
     }

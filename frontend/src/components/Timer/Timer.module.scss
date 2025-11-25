@@ -17,10 +17,10 @@
     border-radius: 5%;
 
     &:hover {
-        background-color: adjust-color($color: $orange, $lightness: 10%);
+        background-color: orangered;
     }
     &:active {
-        background-color: adjust-color($color: $orange, $lightness: -10%);
+        background-color: orangered;
     }
 }
 

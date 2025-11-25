@@ -31,8 +31,8 @@
         }
 
         a {
-            color: blue;
-            &:active { color: aqua; }
+            color: $link-1;
+            &:active { color: $link-2; }
         }
     }
 
