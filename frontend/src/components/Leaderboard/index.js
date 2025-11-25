@@ -1,1 +1,1 @@
-export { default } from "./Leaderboard.jsx";
+export { default } from "./Leaderboard";
