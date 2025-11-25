@@ -1,0 +1,69 @@
+.container {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) auto;
+  height: 100vh;
+}
+
+.left {
+  overflow-y: auto;
+  background: $blue;
+  padding: 10px;
+}
+
+.right {
+  position: sticky;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 16px;
+}
+
+.camera {
+  width: 100%;
+  height: 60vh;
+  border-radius: 8px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.card {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  align-items: center;
+  justify-items: center;
+}
+
+.cardFrame {
+  width: 100%;
+  aspect-ratio: 1;
+  background: $white;
+  border: 3px solid $orange;
+  border-radius: 8px;
+  box-sizing: border-box;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hand {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  transition: transform 0.15s ease;
+}
+
+.hand:hover { transform: scale(1.15); }
+
+.caption {
+  margin-top: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: $white !important;
+}
