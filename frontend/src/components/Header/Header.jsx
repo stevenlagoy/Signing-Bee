@@ -1,10 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styles from "./Header.module.scss";
-import ThemeToggle from "../ThemeToggle/ThemeToggle";
-import LoginDropDown from "../../components/Dropdown/LoginDropDown";
-import {useLogout} from '../../hooks/useLogout.jsx'
-import {useAuthContext} from '../../hooks/useAuthContext.jsx'
+import ThemeToggle from "../ThemeToggle";
 
 export default function Header() {
   const {logout} = useLogout()

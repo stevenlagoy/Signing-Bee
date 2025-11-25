@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./About.module.scss";
-import CreatorProfileCard from "@/components/CreatorProfileCard/CreatorProfileCard";
+import CreatorProfileCard from "@/components/CreatorProfileCard";
 import { creators } from "@/data/creators";
 
 export default function About() {
