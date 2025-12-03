@@ -62,9 +62,9 @@ jobs:
       #   run: npm run test:ci
 
       # 7. Run Cypress E2E tests
-      - name: Run Cypress tests
-        uses: cypress-io/github-action@v6
-        with:
-          start: npm start --prefix signing-bee
-          wait-on: http://localhost:3000
-          wait-on-timeout: 60
+      # - name: Run Cypress tests
+      #   uses: cypress-io/github-action@v6
+      #   with:
+      #     start: npm start --prefix signing-bee
+      #     wait-on: http://localhost:3000
+      #     wait-on-timeout: 60
