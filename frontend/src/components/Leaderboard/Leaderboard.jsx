@@ -1,5 +1,5 @@
 import styles from './Leaderboard.module.scss';
-import Dropdown from '../Dropdown/Dropdown';
+import Dropdown from '../Dropdown';
 import { useState, useEffect } from 'react';
 
 export default function Leaderboard() {

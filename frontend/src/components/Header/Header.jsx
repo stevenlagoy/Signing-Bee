@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styles from "./Header.module.scss";
-import ThemeToggle from "../ThemeToggle/ThemeToggle";
+import ThemeToggle from "../ThemeToggle";
 
 export default function Header() {
   return (

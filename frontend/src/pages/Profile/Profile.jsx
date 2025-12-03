@@ -1,3 +1,9 @@
+import styles from "./Profile.module.scss";
+
 export default function Profile() {
-    return <h1>Your Profile</h1>
+    return (
+        <div className={styles.profile}>
+            <h1>Your Profile</h1>
+        </div>
+    );
 }
