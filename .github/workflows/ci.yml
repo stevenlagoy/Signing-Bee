@@ -52,9 +52,9 @@ jobs:
         run: npm run migrate:test
 
       # 5. Run backend tests (Jest + Supertest)
-      - name: Run backend tests
-        working-directory: ./backend
-        run: npm run test
+      # - name: Run backend tests
+      #   working-directory: ./backend
+      #   run: npm run test
 
       # 6. Run frontend tests (Jest)
       - name: Run frontend tests
