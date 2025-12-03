@@ -54,12 +54,12 @@ jobs:
       # 5. Run backend tests (Jest + Supertest)
       - name: Run backend tests
         working-directory: ./backend
-        run: npm test
+        run: npm run dev && npm run test
 
       # 6. Run frontend tests (Jest)
       - name: Run frontend tests
         working-directory: ./frontend
-        run: npm run test:ci
+        run: npm run dev && npm run test:ci
 
       # 7. Run Cypress E2E tests
       - name: Run Cypress tests
