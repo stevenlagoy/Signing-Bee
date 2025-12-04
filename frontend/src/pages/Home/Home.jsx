@@ -23,14 +23,14 @@ export default function Home() {
                         There are several ways to learn ASL on Signing Bee! Start by going to
                         the <Link to="/asl-reference">ASL Reference page</Link> and learn to sign the
                         alphabet. You can turn on your camera to test your signing. Once you are
-                        ready, go to the <Link to="/practice">Practice page</Link> and test out
+                        ready, go to the <Link to="/play">Play page</Link> and test out
                         signing letters to make words. 
                     </p>
                 </div>
                 <div>
                     <h2>Ready to Sign?</h2>
-                    <Link to="/practice">
-                        <button>Click here to enter Practice Mode</button>
+                    <Link to="/play">
+                        <button>Click here to Play!</button>
                     </Link>
                 </div>
                 <div className={styles.images}>
