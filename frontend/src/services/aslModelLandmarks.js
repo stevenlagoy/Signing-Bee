@@ -127,14 +127,14 @@ const aslModelLandmarks = {
                 // Can't type the same letter twice in a row - must show a different letter first
                 if (predictedClass === lastAddedLetter) {
                     // Same as last added letter - can't start tracking it yet
-                    console.log(`[aslModelLandmarks] ⛔ Can't type "${predictedClass}" again - must change letter first`);
+                    // console.log(`[aslModelLandmarks] ⛔ Can't type "${predictedClass}" again - must change letter first`);
                     currentHighConfidenceLetter = '';
                     thresholdReachedTime = 0;
                 } else if (predictedClass !== currentHighConfidenceLetter) {
                     // Different letter from what we're tracking - start new tracking
                     currentHighConfidenceLetter = predictedClass;
                     thresholdReachedTime = now;
-                    console.log(`[aslModelLandmarks] 🎯 Started tracking: ${predictedClass}`);
+                    // console.log(`[aslModelLandmarks] 🎯 Started tracking: ${predictedClass}`);
                 } else {
                     // Same letter maintained above threshold - check if enough time passed
                     const holdDuration = now - thresholdReachedTime;
@@ -142,7 +142,7 @@ const aslModelLandmarks = {
                     if (holdDuration >= DEBOUNCE_MS) {
                         // Held long enough - add the letter
                         currentText += predictedClass;
-                        console.log(`[aslModelLandmarks] ✅ Added letter: ${predictedClass} (held ${holdDuration}ms)`);
+                        // console.log(`[aslModelLandmarks] ✅ Added letter: ${predictedClass} (held ${holdDuration}ms)`);
 
                         // Reset tracking to require another hold
                         currentHighConfidenceLetter = '';
@@ -153,7 +153,7 @@ const aslModelLandmarks = {
             } else {
                 // Confidence dropped below threshold - reset tracking
                 if (currentHighConfidenceLetter) {
-                    console.log(`[aslModelLandmarks] ⚠️ Confidence dropped, reset tracking for: ${currentHighConfidenceLetter}`);
+                    // console.log(`[aslModelLandmarks] ⚠️ Confidence dropped, reset tracking for: ${currentHighConfidenceLetter}`);
                     currentHighConfidenceLetter = '';
                     thresholdReachedTime = 0;
                 }

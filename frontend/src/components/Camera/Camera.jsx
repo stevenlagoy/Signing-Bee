@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
 import Webcam from 'react-webcam';
-import { Holistic, HAND_CONNECTIONS, POSE_CONNECTIONS, FACEMESH_TESSELATION } from '@mediapipe/holistic';
+import { Holistic, HAND_CONNECTIONS } from '@mediapipe/holistic';
 import { Camera } from '@mediapipe/camera_utils';
 import { drawConnectors, drawLandmarks } from '@mediapipe/drawing_utils';
 // import aslModel from '../../services/aslModel'; // Complex model not working yet
@@ -55,26 +55,26 @@ export default function WebcamSample() {
         canvasCtx.save();
         canvasCtx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 
-        // Draw face mesh
-        if (results.faceLandmarks) {
-            drawConnectors(canvasCtx, results.faceLandmarks, FACEMESH_TESSELATION, {
-                color: '#C0C0C070',
-                lineWidth: 1
-            });
-        }
+        // // Draw face mesh
+        // if (results.faceLandmarks) {
+        //     drawConnectors(canvasCtx, results.faceLandmarks, FACEMESH_TESSELATION, {
+        //         color: '#C0C0C070',
+        //         lineWidth: 1
+        //     });
+        // }
 
-        // Draw pose
-        if (results.poseLandmarks) {
-            drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS, {
-                color: '#00FF00',
-                lineWidth: 4
-            });
-            drawLandmarks(canvasCtx, results.poseLandmarks, {
-                color: '#FF0000',
-                lineWidth: 2,
-                radius: 4
-            });
-        }
+        // // Draw pose
+        // if (results.poseLandmarks) {
+        //     drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS, {
+        //         color: '#00FF00',
+        //         lineWidth: 4
+        //     });
+        //     drawLandmarks(canvasCtx, results.poseLandmarks, {
+        //         color: '#FF0000',
+        //         lineWidth: 2,
+        //         radius: 4
+        //     });
+        // }
 
         // Draw left hand
         if (results.leftHandLandmarks) {
