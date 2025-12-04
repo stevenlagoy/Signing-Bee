@@ -1,8 +1,6 @@
 import styles from "./speaker.module.scss";
 
-export default function Speaker(props) {
-    const muted = props.muted;
-    const setMuted = props.setMuted;
+export default function Speaker({muted, setMuted}) {
 
     function handleToggle() {
         setMuted(!muted);
