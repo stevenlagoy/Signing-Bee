@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
 import Webcam from 'react-webcam';
-import { Holistic, HAND_CONNECTIONS, POSE_CONNECTIONS, FACEMESH_TESSELATION } from '@mediapipe/holistic';
+import { Holistic, HAND_CONNECTIONS } from '@mediapipe/holistic';
 import { Camera } from '@mediapipe/camera_utils';
 import { drawConnectors, drawLandmarks } from '@mediapipe/drawing_utils';
 // import aslModel from '../../services/aslModel'; // Complex model not working yet
@@ -50,65 +50,44 @@ export default function WebcamSample() {
 
     const onResults = useCallback(async (results) => {
         if (!canvasRef.current) return;
+        frameCountRef.current += 1;
+        if (frameCountRef.current % 3 === 0) {
+            const canvasCtx = canvasRef.current.getContext('2d');
+            canvasCtx.save();
+            canvasCtx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 
-        const canvasCtx = canvasRef.current.getContext('2d');
-        canvasCtx.save();
-        canvasCtx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+            // Draw left hand
+            if (results.leftHandLandmarks) {
+                drawConnectors(canvasCtx, results.leftHandLandmarks, HAND_CONNECTIONS, {
+                    color: '#CC0000',
+                    lineWidth: 5
+                });
+                drawLandmarks(canvasCtx, results.leftHandLandmarks, {
+                    color: '#00FF00',
+                    lineWidth: 2,
+                    radius: 5
+                });
+            }
 
-        // Draw face mesh
-        if (results.faceLandmarks) {
-            drawConnectors(canvasCtx, results.faceLandmarks, FACEMESH_TESSELATION, {
-                color: '#C0C0C070',
-                lineWidth: 1
-            });
+            // Draw right hand
+            if (results.rightHandLandmarks) {
+                drawConnectors(canvasCtx, results.rightHandLandmarks, HAND_CONNECTIONS, {
+                    color: '#0000CC',
+                    lineWidth: 5
+                });
+                drawLandmarks(canvasCtx, results.rightHandLandmarks, {
+                    color: '#FF0000',
+                    lineWidth: 2,
+                    radius: 5
+                });
+            }
+
+            canvasCtx.restore();
         }
-
-        // Draw pose
-        if (results.poseLandmarks) {
-            drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS, {
-                color: '#00FF00',
-                lineWidth: 4
-            });
-            drawLandmarks(canvasCtx, results.poseLandmarks, {
-                color: '#FF0000',
-                lineWidth: 2,
-                radius: 4
-            });
-        }
-
-        // Draw left hand
-        if (results.leftHandLandmarks) {
-            drawConnectors(canvasCtx, results.leftHandLandmarks, HAND_CONNECTIONS, {
-                color: '#CC0000',
-                lineWidth: 5
-            });
-            drawLandmarks(canvasCtx, results.leftHandLandmarks, {
-                color: '#00FF00',
-                lineWidth: 2,
-                radius: 5
-            });
-        }
-
-        // Draw right hand
-        if (results.rightHandLandmarks) {
-            drawConnectors(canvasCtx, results.rightHandLandmarks, HAND_CONNECTIONS, {
-                color: '#0000CC',
-                lineWidth: 5
-            });
-            drawLandmarks(canvasCtx, results.rightHandLandmarks, {
-                color: '#FF0000',
-                lineWidth: 2,
-                radius: 5
-            });
-        }
-
-        canvasCtx.restore();
 
         // Run prediction when recording (throttle to every 15 frames = ~2x per second at 30fps)
         if (isRecordingRef.current && modelLoaded) {
-            frameCountRef.current += 1;
-
-            if (frameCountRef.current % 15 === 0) {
+            if (frameCountRef.current % 30 === 0) {
                 try {
                     const prediction = await aslModel.predictFromLandmarks(results);
 
@@ -135,12 +114,13 @@ export default function WebcamSample() {
                 });
 
                 holistic.setOptions({
+                    enableFaceGeometry: false,
                     modelComplexity: 1,
-                    smoothLandmarks: true,
+                    smoothLandmarks: false,
                     enableSegmentation: false,
                     smoothSegmentation: false,
                     minDetectionConfidence: 0.7,
-                    minTrackingConfidence: 0.7,
+                    minTrackingConfidence: 0.6,
                     refineFaceLandmarks: false
                 });
 
@@ -156,8 +136,8 @@ export default function WebcamSample() {
                             await holisticRef.current.send({ image: videoElement.current.video });
                         }
                     },
-                    width: 640,
-                    height: 480
+                    width: videoConstraints.width,
+                    height: videoConstraints.height
                 });
 
                 camera.start();
@@ -248,8 +228,8 @@ export default function WebcamSample() {
                         <Webcam audio={false} ref={videoElement} videoConstraints={videoConstraints} />
                         <canvas
                             ref={canvasRef}
-                            width={640}
-                            height={480}
+                            width={videoConstraints.width}
+                            height={videoConstraints.height}
                             className={styles.canvas}
                         />
                     </>

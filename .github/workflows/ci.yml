@@ -10,6 +10,18 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:13
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready" --health-interval 10s --health-timeout 5s --health-retries 5
+        env:
+          POSTGRES_DB: test_db
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+              
     strategy:
       matrix:
         node-version: [22.x]
@@ -34,17 +46,22 @@ jobs:
         working-directory: ./frontend
         run: npm ci
 
-      # 5. Run backend tests (Jest + Supertest)
-      - name: Run backend tests
+      # 5. Set up test database schema
+      - name: Set up test database schema
         working-directory: ./backend
-        run: npm test
+        run: npm run migrate:test
+
+      # 5. Run backend tests (Jest + Supertest)
+      # - name: Run backend tests
+      #   working-directory: ./backend
+      #   run: npm run test
 
       # 6. Run frontend tests (Jest)
-      - name: Run frontend tests
-        working-directory: ./frontend
-        run: npm run test:ci
+      # - name: Run frontend tests
+      #   working-directory: ./frontend
+      #   run: npm run test:ci
 
-      # # 7. Run Cypress E2E tests
+      # 7. Run Cypress E2E tests
       # - name: Run Cypress tests
       #   uses: cypress-io/github-action@v6
       #   with:

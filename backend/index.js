@@ -3,12 +3,16 @@ import dotenv from 'dotenv';
 import pkg from 'pg';
 import bcrypt from 'bcrypt';
 import cors from "cors";
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { pool } from "./db/pool.js";
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 4000;
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const frontendPath = path.join(__dirname, '../frontend/dist');
 
 // Middleware to parse JSON
 app.use(express.json());
@@ -125,6 +129,11 @@ app.get('/scores/user/:userId/high', async (req, res) => {
     console.error(err);
     res.status(500).json({ error: 'Failed to fetch high score' });
   }
+});
+
+app.use(express.static(frontendPath));
+app.get(/.*/, (req, res) => {
+  res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
 // START SERVER -----------------------------------------------------------------------------------
