@@ -14,8 +14,8 @@ export default function Header() {
         <Link to="/asl-reference" className="aslReferenceLink">
           ASL Reference
         </Link>
-        <Link to="/practice" className="practiceLink">
-          Practice
+        <Link to="/play" className="playLink">
+          Play
         </Link>
         <Link to="/about" className="aboutLink">
           About
