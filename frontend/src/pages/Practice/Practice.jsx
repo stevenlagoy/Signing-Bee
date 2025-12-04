@@ -5,9 +5,6 @@ import Dropdown from "../../components/Dropdown";
 import Timer from "../../components/Timer";
 import Leaderboard from "../../components/Leaderboard";
 import { useState, useEffect } from "react";
-import WebcamSample from "../../components/Camera/Camera";
-import Dropdown from "../../components/Dropdown/Dropdown";
-import Timer from "../../components/Timer/Timer";
 import LetterReveal from "../../components/LetterReveal/LetterReveal";
 import Speaker from "../../components/Speaker/Speaker";
 
@@ -82,9 +79,6 @@ export default function Practice() {
         <div>
             <div className={styles.DIDContainer}>
                 <Leaderboard />
-                <Dropdown trigger="Leaderboard" className={styles.leaderboard}>
-                    <p>Names Here</p>
-                </Dropdown>
                 <div className={styles.introBox}>
                     <h1>Practice Mode</h1>
                     <p>
