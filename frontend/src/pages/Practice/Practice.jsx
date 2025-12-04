@@ -1,4 +1,9 @@
+import React from "react";
 import styles from "./Practice.module.scss";
+import WebcamSample from "../../components/Camera";
+import Dropdown from "../../components/Dropdown";
+import Timer from "../../components/Timer";
+import Leaderboard from "../../components/Leaderboard";
 import { useState, useEffect } from "react";
 import WebcamSample from "../../components/Camera/Camera";
 import Dropdown from "../../components/Dropdown/Dropdown";
@@ -76,6 +81,7 @@ export default function Practice() {
     return (
         <div>
             <div className={styles.DIDContainer}>
+                <Leaderboard />
                 <Dropdown trigger="Leaderboard" className={styles.leaderboard}>
                     <p>Names Here</p>
                 </Dropdown>
