@@ -55,27 +55,6 @@ export default function WebcamSample() {
         canvasCtx.save();
         canvasCtx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 
-        // // Draw face mesh
-        // if (results.faceLandmarks) {
-        //     drawConnectors(canvasCtx, results.faceLandmarks, FACEMESH_TESSELATION, {
-        //         color: '#C0C0C070',
-        //         lineWidth: 1
-        //     });
-        // }
-
-        // // Draw pose
-        // if (results.poseLandmarks) {
-        //     drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS, {
-        //         color: '#00FF00',
-        //         lineWidth: 4
-        //     });
-        //     drawLandmarks(canvasCtx, results.poseLandmarks, {
-        //         color: '#FF0000',
-        //         lineWidth: 2,
-        //         radius: 4
-        //     });
-        // }
-
         // Draw left hand
         if (results.leftHandLandmarks) {
             drawConnectors(canvasCtx, results.leftHandLandmarks, HAND_CONNECTIONS, {
@@ -108,7 +87,7 @@ export default function WebcamSample() {
         if (isRecordingRef.current && modelLoaded) {
             frameCountRef.current += 1;
 
-            if (frameCountRef.current % 15 === 0) {
+            if (frameCountRef.current % 30 === 0) {
                 try {
                     const prediction = await aslModel.predictFromLandmarks(results);
 
@@ -135,12 +114,13 @@ export default function WebcamSample() {
                 });
 
                 holistic.setOptions({
+                    enableFaceGeometry: false,
                     modelComplexity: 1,
-                    smoothLandmarks: true,
+                    smoothLandmarks: false,
                     enableSegmentation: false,
                     smoothSegmentation: false,
                     minDetectionConfidence: 0.7,
-                    minTrackingConfidence: 0.7,
+                    minTrackingConfidence: 0.6,
                     refineFaceLandmarks: false
                 });
 
