@@ -1,4 +1,4 @@
-import styles from "./speaker.module.scss";
+import styles from "./Speaker.module.scss";
 
 export default function Speaker({muted, setMuted}) {
 
