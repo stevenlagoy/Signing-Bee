@@ -41,6 +41,7 @@
   display: flex;
   justify-content: center;
   margin-top: 20px;
+  font-family: 'Inter', sans-serif;
 }
 
 .startPractice button { 
@@ -54,6 +55,7 @@
     cursor: pointer;
     font-size: 1rem;
     font-weight: bold;
+    box-shadow: 0 3px 5px rgba(0,0,0,0.25);
 }
 
 .scoreLabel {
