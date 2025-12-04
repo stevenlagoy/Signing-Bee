@@ -7,9 +7,11 @@ export default function Leaderboard() {
     const [usersScores, setUsersScores] = useState([]);
     const numberLeaderboardEntries = 5;
 
+    const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:4000';
+
     useEffect(() => {
         const getUsers = async () => {
-            const res = await fetch("http://localhost:4000/users");
+            const res = await fetch(`${API_BASE}/users`);
             if (!res.ok) {
                 throw new Error(`Error fetching leaderboard: ${res.status}`);
             }
