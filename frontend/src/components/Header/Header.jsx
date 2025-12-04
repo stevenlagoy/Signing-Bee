@@ -1,6 +1,7 @@
+import React from "react";
 import { Link } from "react-router-dom";
 import styles from "./Header.module.scss";
-import ThemeToggle from "../ThemeToggle/ThemeToggle";
+import ThemeToggle from "../ThemeToggle";
 
 export default function Header() {
   return (
@@ -26,7 +27,7 @@ export default function Header() {
       <Link to="/profile" className={styles.profileMenu}>
         <div className={styles.userProfile}>
           <h2 className={styles.userName}>User Name</h2>
-          <img src="/default-pfp.svg" alt="Default user profile picture" width="50" height="50" viewBox="0 0 340 340" />
+          <img src="/default-pfp.svg" alt="Default user profile picture" width="50" height="50" />
         </div>
       </Link>
     </header>
