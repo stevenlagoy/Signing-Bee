@@ -8,8 +8,8 @@ import ASLReferencePage from "./pages/ASLReference";
 import PlayPage from "./pages/Play";
 import ProfilePage from "./pages/Profile";
 import NotFoundPage from "./pages/NotFound";
-import Login from "./pages/Login/Login";
-import Signup from "./pages/Signup/Signup";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 
 const Layout = ({ children }) => (
   <div className="screen">
