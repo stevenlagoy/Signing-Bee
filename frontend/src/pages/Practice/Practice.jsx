@@ -1,9 +1,10 @@
 import styles from "./Practice.module.scss";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import WebcamSample from "../../components/Camera/Camera";
 import Dropdown from "../../components/Dropdown/Dropdown";
 import Timer from "../../components/Timer/Timer";
 import LetterReveal from "../../components/LetterReveal/LetterReveal";
+import Speaker from "../../components/Speaker/Speaker";
 
 const temp_words = ["ELDER", "APPLE", "DISH"]; //add more words here for now
 
@@ -33,6 +34,7 @@ export default function Practice() {
 
     //makes each letter added unique to prevent immediate reuse into next letter
     const handleLetterDetected = (letter) => {
+        setCorrectLetters((prev) => prev + 1);
         setDetectedLetter({
             letter,
             id: Date.now(),
@@ -41,8 +43,35 @@ export default function Practice() {
 
     //button to start both timer and camera
     const startPractice = () => {
+        setCorrectLetters(0);
+        setElapsedSeconds(0);
         setOneStart((prev) => prev + 1);
     };
+
+    const [muted, setMuted] = useState(false);
+    const [correctLetters, setCorrectLetters] = useState(0);
+    const [elapsedSeconds, setElapsedSeconds] = useState(0);
+
+    useEffect(() => {
+        const media = document.querySelectorAll("audio, video");
+        media.forEach((AVElement) => {
+            AVElement.muted = muted;
+        });
+    }, [muted]);
+
+    useEffect(() => {
+        if (oneStart === 0) return;
+
+        const interval = setInterval(() => {
+            setElapsedSeconds(prev => prev + 1);
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [oneStart]);
+
+    const minutes = elapsedSeconds / 60;
+    const lettersPerMinute =
+        minutes > 0 ? Math.round(correctLetters / minutes) : 0;
 
     return (
         <div>
@@ -62,7 +91,18 @@ export default function Practice() {
                 </Dropdown>
             </div>
 
-            <div className={styles.startRow}>
+            <div className={styles.speakerScore}>
+                <div className={styles.speaker}>
+                    <Speaker muted={muted} setMuted={setMuted}/>
+                </div>
+                
+                <div className={styles.scoreContainer}>
+                    <span className={styles.scoreLabel}>Score</span>
+                    <div className={styles.score}>{lettersPerMinute}</div>
+                </div>
+            </div>
+
+            <div className={styles.startPractice}>
                 <button onClick={startPractice}>Start Practice</button>
             </div>
 
