@@ -14,12 +14,12 @@
         .name {
             font-size: clamp(0.6rem, 1em, 0.9rem);
             text-overflow: ellipsis;
-            color: $gray-040;
+            color: $gray-040 !important;
         }
 
         .score {
             margin: 0 !important;
-            color: $gray-000;
+            color: $gray-000 !important;
         }
     }
 }
