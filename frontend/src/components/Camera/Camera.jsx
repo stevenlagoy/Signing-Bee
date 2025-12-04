@@ -50,43 +50,43 @@ export default function WebcamSample() {
 
     const onResults = useCallback(async (results) => {
         if (!canvasRef.current) return;
+        frameCountRef.current += 1;
+        if (frameCountRef.current % 3 === 0) {
+            const canvasCtx = canvasRef.current.getContext('2d');
+            canvasCtx.save();
+            canvasCtx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 
-        const canvasCtx = canvasRef.current.getContext('2d');
-        canvasCtx.save();
-        canvasCtx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+            // Draw left hand
+            if (results.leftHandLandmarks) {
+                drawConnectors(canvasCtx, results.leftHandLandmarks, HAND_CONNECTIONS, {
+                    color: '#CC0000',
+                    lineWidth: 5
+                });
+                drawLandmarks(canvasCtx, results.leftHandLandmarks, {
+                    color: '#00FF00',
+                    lineWidth: 2,
+                    radius: 5
+                });
+            }
 
-        // Draw left hand
-        if (results.leftHandLandmarks) {
-            drawConnectors(canvasCtx, results.leftHandLandmarks, HAND_CONNECTIONS, {
-                color: '#CC0000',
-                lineWidth: 5
-            });
-            drawLandmarks(canvasCtx, results.leftHandLandmarks, {
-                color: '#00FF00',
-                lineWidth: 2,
-                radius: 5
-            });
+            // Draw right hand
+            if (results.rightHandLandmarks) {
+                drawConnectors(canvasCtx, results.rightHandLandmarks, HAND_CONNECTIONS, {
+                    color: '#0000CC',
+                    lineWidth: 5
+                });
+                drawLandmarks(canvasCtx, results.rightHandLandmarks, {
+                    color: '#FF0000',
+                    lineWidth: 2,
+                    radius: 5
+                });
+            }
+
+            canvasCtx.restore();
         }
-
-        // Draw right hand
-        if (results.rightHandLandmarks) {
-            drawConnectors(canvasCtx, results.rightHandLandmarks, HAND_CONNECTIONS, {
-                color: '#0000CC',
-                lineWidth: 5
-            });
-            drawLandmarks(canvasCtx, results.rightHandLandmarks, {
-                color: '#FF0000',
-                lineWidth: 2,
-                radius: 5
-            });
-        }
-
-        canvasCtx.restore();
 
         // Run prediction when recording (throttle to every 15 frames = ~2x per second at 30fps)
         if (isRecordingRef.current && modelLoaded) {
-            frameCountRef.current += 1;
-
             if (frameCountRef.current % 30 === 0) {
                 try {
                     const prediction = await aslModel.predictFromLandmarks(results);
@@ -136,8 +136,8 @@ export default function WebcamSample() {
                             await holisticRef.current.send({ image: videoElement.current.video });
                         }
                     },
-                    width: 640,
-                    height: 480
+                    width: videoConstraints.width,
+                    height: videoConstraints.height
                 });
 
                 camera.start();
@@ -228,8 +228,8 @@ export default function WebcamSample() {
                         <Webcam audio={false} ref={videoElement} videoConstraints={videoConstraints} />
                         <canvas
                             ref={canvasRef}
-                            width={640}
-                            height={480}
+                            width={videoConstraints.width}
+                            height={videoConstraints.height}
                             className={styles.canvas}
                         />
                     </>
