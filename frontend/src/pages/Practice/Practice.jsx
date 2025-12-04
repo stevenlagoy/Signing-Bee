@@ -5,8 +5,8 @@ import Dropdown from "../../components/Dropdown";
 import Timer from "../../components/Timer";
 import Leaderboard from "../../components/Leaderboard";
 import { useState, useEffect } from "react";
-import LetterReveal from "../../components/LetterReveal/LetterReveal";
-import Speaker from "../../components/Speaker/Speaker";
+import LetterReveal from "../../components/LetterReveal";
+import Speaker from "../../components/Speaker";
 
 const temp_words = ["ELDER", "APPLE", "DISH"]; //add more words here for now
 
