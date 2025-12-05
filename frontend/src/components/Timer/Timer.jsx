@@ -6,7 +6,7 @@
 import styles from "./Timer.module.scss";
 import { useState, useEffect, useRef } from 'react';
 
-function Timer() {
+function Timer({ oneStart = 0 }) {
     const [time, setTime] = useState(0);
     const [isRunning, setIsRunning] = useState(false);
     const intervalRef = useRef(null);
@@ -36,7 +36,17 @@ function Timer() {
         clearInterval(intervalRef.current);
     }
 
-    //clear 
+    useEffect(() => {
+        if (oneStart > 0 && !isRunning) {
+            setIsRunning(true);
+            clearInterval(intervalRef.current);
+            intervalRef.current = setInterval(() => {
+                setTime(prevTime => prevTime + 10);
+            }, 10);
+        }
+    }, [oneStart, isRunning]);
+
+    //clear
     useEffect(() => {
         return () => clearInterval(intervalRef.current);
     }, []);

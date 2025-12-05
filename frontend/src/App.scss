@@ -10,6 +10,7 @@ main {
   display: block;
   justify-content: center;
   padding: 0;
+  overflow: auto;
   flex: 1;
   background-color: $background-1;
   min-height: 0;

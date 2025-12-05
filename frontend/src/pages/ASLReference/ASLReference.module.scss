@@ -40,7 +40,8 @@
 .cardFrame {
   width: 100%;
   aspect-ratio: 1;
-  background: $white;
+  background: $background-1;
+  transition: background 0.3s ease;
   border: 3px solid $orange;
   border-radius: 8px;
   box-sizing: border-box;
@@ -57,13 +58,18 @@
   width: auto;
   height: auto;
   transition: transform 0.15s ease;
+  filter: invert(calc(100 - $base-brightness));
 }
 
 .hand:hover { transform: scale(1.15); }
 
 .caption {
-  margin-top: 6px;
+  margin-top: 0.5em !important;
   font-size: 14px;
   font-weight: 500;
-  color: $white !important;
+  color: white !important;
+  background-color: $background-1;
+  padding: 0.25em 0.75em;
+  border-radius: 1em;
+  font-weight: bolder !important;
 }
