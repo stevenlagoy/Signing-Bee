@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./Practice.module.scss";
+import styles from "./Play.module.scss";
 import WebcamSample from "../../components/Camera";
 import Dropdown from "../../components/Dropdown";
 import Timer from "../../components/Timer";
@@ -10,7 +10,7 @@ import Speaker from "../../components/Speaker";
 
 const temp_words = ["ELDER", "APPLE", "DISH"]; //add more words here for now
 
-export default function Practice() {
+export default function Play() {
     //get random starting word
     const [currentWord, setCurrentWord] = useState(
         temp_words[Math.floor(Math.random() * temp_words.length)]
@@ -80,10 +80,10 @@ export default function Practice() {
             <div className={styles.DIDContainer}>
                 <Leaderboard />
                 <div className={styles.introBox}>
-                    <h1>Practice Mode</h1>
+                    <h1>Play</h1>
                     <p>
                         You will be shown a word and must sign each letter. You will earn more points for
-                        faster signing! There is no time limit and you can practice for as long as you want.
+                        faster signing! There is no time limit and you can play for as long as you want.
                     </p>
                 </div>
                 <Dropdown trigger="Wiki" className={styles.wiki}>
@@ -93,9 +93,9 @@ export default function Practice() {
 
             <div className={styles.speakerScore}>
                 <div className={styles.speaker}>
-                    <Speaker muted={muted} setMuted={setMuted}/>
+                    <Speaker muted={muted} setMuted={setMuted} />
                 </div>
-                
+
                 <div className={styles.scoreContainer}>
                     <span className={styles.scoreLabel}>Score</span>
                     <div className={styles.score}>{lettersPerMinute}</div>
@@ -112,7 +112,7 @@ export default function Practice() {
                     detectedLetter={detectedLetter}
                     onComplete={nextWord}
                 />
-                <Timer oneStart={oneStart}/>
+                <Timer oneStart={oneStart} />
             </div>
 
             <WebcamSample onLetterDetected={handleLetterDetected} oneStart={oneStart} />

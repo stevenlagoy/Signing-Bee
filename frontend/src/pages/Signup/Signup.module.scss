@@ -1,0 +1,48 @@
+form.signup{
+  width: 600px;
+  height: 300px;
+  margin: 40px auto;
+  padding: 40px;;
+  border-radius: 30px;
+  background-color: $orange;
+  justify-content: center;
+  box-shadow: 4px 4px 10px #888;
+}
+
+div.container{
+  justify-content: center;
+  display:flex;
+}
+
+h3.title{
+    justify-content: center;
+    align-items: center;
+    color: $white !important;
+    font-size: 2.5em !important;
+    font-weight: bold;
+}
+
+label.labels{
+    justify-content: center;
+    align-items: center;
+    color: $white !important;
+    font-size: 1.5em !important;
+    font-weight: bold;
+}
+
+button.buttons{
+    justify-content: center;
+    align-items: center;
+    color: $white !important;
+    font-size: 1.5em !important;
+    font-weight: bold;
+    background: $blue;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+input.inputs{
+    color: $black !important;
+    font-size: 1.5em !important;
+    font-weight: bold;
+}
