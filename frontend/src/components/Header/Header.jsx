@@ -2,16 +2,19 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styles from "./Header.module.scss";
 import ThemeToggle from "../ThemeToggle";
+import LoginDropDown from "../../components/Dropdown";
+import {useLogout} from '../../hooks/useLogout.jsx'
+import {useAuthContext} from '../../hooks/useAuthContext.jsx'
 
 export default function Header() {
   const {logout} = useLogout()
-    const {user} = useAuthContext()
+  const {user} = useAuthContext()
   
-    const handleClick = () =>
-    {
-      logout()
-    }
-  
+  const handleClick = () =>
+  {
+    logout()
+  }
+
   return (
     <header className={styles.header}>
       <Link to="/" className={styles.brand}>
@@ -44,13 +47,14 @@ export default function Header() {
             <Link to="/signup">Sign Up</Link>
           </nav>
         )}
-                    
+
         {user && (
           <div>
-            <span>{user.email}</span>
+            <span>{user.username}</span>
             <p onClick={handleClick}>Log Out</p>
           </div>
-        )}
+        )}           
+        
 
       </LoginDropDown>
     </header>
