@@ -21,7 +21,7 @@ const login = () => {
           <label className={styles.labels}>Email:   </label>
           <input 
             className={styles.inputs}
-            type="username"
+            type="email"
             onChange={(e) => setEmail(e.target.value)}
             value={email}
           />
