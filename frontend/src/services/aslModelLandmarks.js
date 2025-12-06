@@ -53,7 +53,7 @@ const aslModelLandmarks = {
         }
 
         try {
-            console.log('[aslModelLandmarks] Loading TensorFlow.js model...');
+            // console.log('[aslModelLandmarks] Loading TensorFlow.js model...');
 
             const tf = window.tf;
             if (!tf) {
@@ -66,9 +66,9 @@ const aslModelLandmarks = {
             model = await tf.loadLayersModel(MODEL_URL);
             isLoaded = true;
 
-            console.log('[aslModelLandmarks] ✅ Model loaded successfully');
-            console.log('[aslModelLandmarks] Input shape:', model.inputs[0].shape);
-            console.log('[aslModelLandmarks] Output shape:', model.outputs[0].shape);
+            // console.log('[aslModelLandmarks] ✅ Model loaded successfully');
+            // console.log('[aslModelLandmarks] Input shape:', model.inputs[0].shape);
+            // console.log('[aslModelLandmarks] Output shape:', model.outputs[0].shape);
         } catch (error) {
             console.error('[aslModelLandmarks] ❌ Failed to load model:', error);
             throw error;

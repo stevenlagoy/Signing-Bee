@@ -32,10 +32,10 @@ export default function WebcamSample() {
 
     useEffect(() => {
         // Load the ASL model when component mounts
-        console.log('[Camera] Loading ASL model...');
+        // console.log('[Camera] Loading ASL model...');
         aslModel.loadModel()
             .then(() => {
-                console.log('[Camera] ASL model loaded successfully');
+                // console.log('[Camera] ASL model loaded successfully');
                 setModelLoaded(true);
             })
             .catch(err => {
@@ -51,7 +51,7 @@ export default function WebcamSample() {
     const onResults = useCallback(async (results) => {
         if (!canvasRef.current) return;
         frameCountRef.current += 1;
-        if (frameCountRef.current % 3 === 0) {
+        if (frameCountRef.current % 2 === 0) { // Throttle drawing to every other frame with modulus 2
             const canvasCtx = canvasRef.current.getContext('2d');
             canvasCtx.save();
             canvasCtx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
@@ -85,7 +85,7 @@ export default function WebcamSample() {
             canvasCtx.restore();
         }
 
-        // Run prediction when recording (throttle to every 15 frames = ~2x per second at 30fps)
+        // Run prediction when recording (throttle to every 30 frames = ~1x per second at 30fps)
         if (isRecordingRef.current && modelLoaded) {
             if (frameCountRef.current % 30 === 0) {
                 try {
@@ -165,7 +165,7 @@ export default function WebcamSample() {
             console.error('[Camera] Cannot start recording - model not loaded');
             return;
         }
-        console.log('[Camera] Starting real-time recognition');
+        // console.log('[Camera] Starting real-time recognition');
         setIsRecording(true);
         isRecordingRef.current = true;
         aslModel.clearText();
@@ -178,8 +178,8 @@ export default function WebcamSample() {
     const stopRecording = () => {
         setIsRecording(false);
         isRecordingRef.current = false;
-        console.log('[Camera] Stopped real-time recognition');
-        console.log('[Camera] Final text:', predictedText);
+        // console.log('[Camera] Stopped real-time recognition');
+        // console.log('[Camera] Final text:', predictedText);
     };
 
     const startCam = () => {
