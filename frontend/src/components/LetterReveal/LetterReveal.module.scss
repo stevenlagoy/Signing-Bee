@@ -9,26 +9,32 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  width: 150px;
-  height: 150px;
-  z-index: 10;
-  animation: xPop 0.5s ease-out forwards;
   pointer-events: none;
+  width: 300px;
+  height: 300px;
+
+  &.animating {
+    animation: xZoomIn 0.6s ease-out forwards;
+  }
+
+  &.static {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(3);
+  }
 }
 
-@keyframes xPop {
+@keyframes xZoomIn {
   0% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.5);
+    transform: translate(-50%, -50%) scale(0.3);
   }
-  30% {
+  50% {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1.2);
+    transform: translate(-50%, -50%) scale(3.5);
   }
   100% {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(3);
   }
 }
 

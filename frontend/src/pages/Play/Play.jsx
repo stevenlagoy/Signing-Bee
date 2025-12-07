@@ -7,15 +7,15 @@ import { Navigate } from "react-router-dom";
 import LetterReveal from "../../components/LetterReveal";
 import Speaker from "../../components/Speaker";
 import signingBeeRound from "../../services/signingBeeRound";
-import { useAuthContext } from "../../hooks/useAuthContext";
+// import { useAuthContext } from "../../hooks/useAuthContext";
 
 export default function Play() {
-    const { user } = useAuthContext();
+    // const { user } = useAuthContext();
 
-    // Redirect to login if not authenticated
-    if (!user) {
-        return <Navigate to="/login" replace />;
-    }
+    // // Redirect to login if not authenticated
+    // if (!user) {
+    //     return <Navigate to="/login" replace />;
+    // }
     const [currentWord, setCurrentWord] = useState("");
     //most recent accepted letter
     const [detectedLetter, setDetectedLetter] = useState(null);

@@ -3,7 +3,7 @@
 import harrison_picture from "@/assets/creators/harrison_picture.jpg";
 import ricardo_picture from "@/assets/creators/creator_placeholder.png";
 import steven_picture from "@/assets/creators/steven_picture.png";
-import zach_picture from "@/assets/creators/creator_placeholder.png";
+import zack_picture from "@/assets/creators/zack_picture.jpg";
 
 export const creators = [
     {
@@ -20,6 +20,6 @@ export const creators = [
     },
     {
         name: "Zachary McGill",
-        pictureSrc: zach_picture
+        pictureSrc: zack_picture
     },
 ]
