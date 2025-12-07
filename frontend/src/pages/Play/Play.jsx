@@ -52,6 +52,7 @@ export default function Play() {
     const [muted, setMuted] = useState(false);
     const [correctLetters, setCorrectLetters] = useState(0);
     const [elapsedSeconds, setElapsedSeconds] = useState(0);
+    const [isPaused, setIsPaused] = useState(false);
 
     useEffect(() => {
         const media = document.querySelectorAll("audio, video");
@@ -61,14 +62,14 @@ export default function Play() {
     }, [muted]);
 
     useEffect(() => {
-        if (oneStart === 0) return;
+        if (oneStart === 0 || isPaused) return;
 
         const interval = setInterval(() => {
             setElapsedSeconds(prev => prev + 1);
         }, 1000);
 
         return () => clearInterval(interval);
-    }, [oneStart]);
+    }, [oneStart, isPaused]);
 
     const minutes = elapsedSeconds / 60;
     const lettersPerMinute =
@@ -88,6 +89,11 @@ export default function Play() {
 
         // Start next round with new word
         await nextWord();
+    };
+
+    const togglePause = () => {
+        if (oneStart === 0) return; // Don't allow pause before game starts
+        setIsPaused(prev => !prev);
     };
 
     return (
@@ -119,6 +125,11 @@ export default function Play() {
 
             <div className={styles.startPractice}>
                 <button onClick={startPractice}>Play</button>
+                {oneStart > 0 && (
+                    <button onClick={togglePause}>
+                        {isPaused ? 'Resume' : 'Pause'}
+                    </button>
+                )}
             </div>
 
             <div>
@@ -132,7 +143,9 @@ export default function Play() {
 
             </div>
 
-            <WebcamSample onLetterDetected={handleLetterDetected} oneStart={oneStart} />
+            {!isPaused && (
+                <WebcamSample onLetterDetected={handleLetterDetected} oneStart={oneStart} />
+            )}
         </div>
     );
 }
