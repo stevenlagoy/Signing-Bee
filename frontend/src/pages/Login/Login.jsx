@@ -1,8 +1,9 @@
 import styles from './Login.module.scss';
 import {useState} from 'react';
+import {Link} from 'react-router-dom';
 import {useLogin} from '../../hooks/useLogin.jsx'
 
-const login = () => {
+const Login = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const {login, error, isLoading} = useLogin()
@@ -41,10 +42,13 @@ const login = () => {
           <button disabled={isLoading} className={styles.buttons}>Log in</button>
           {error && <div className="error">{error}</div>}
 
+          <p className={styles.switchText}>
+            Don't have an account? <Link to="/signup">Sign up</Link>
+          </p>
         </form>
     </div>
   )
-  
+
 }
 
-export default login;
+export default Login;

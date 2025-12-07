@@ -1,15 +1,21 @@
-import React from "react";
 import styles from "./Play.module.scss";
 import WebcamSample from "../../components/Camera";
-import Dropdown from "../../components/Dropdown";
 import Timer from "../../components/Timer";
 import Leaderboard from "../../components/Leaderboard";
 import { useState, useEffect } from "react";
+import { Navigate } from "react-router-dom";
 import LetterReveal from "../../components/LetterReveal";
 import Speaker from "../../components/Speaker";
 import signingBeeRound from "../../services/signingBeeRound";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 export default function Play() {
+    const { user } = useAuthContext();
+
+    // Redirect to login if not authenticated
+    if (!user) {
+        return <Navigate to="/login" replace />;
+    }
     const [currentWord, setCurrentWord] = useState("");
     //most recent accepted letter
     const [detectedLetter, setDetectedLetter] = useState(null);

@@ -46,3 +46,20 @@ input.inputs{
     font-size: 1.5em !important;
     font-weight: bold;
 }
+
+.switchText {
+    margin-top: 1rem;
+    color: $white;
+    font-size: 1rem;
+    text-align: center;
+
+    a {
+        color: $blue;
+        font-weight: bold;
+        text-decoration: underline;
+
+        &:hover {
+            color: darken($blue, 10%);
+        }
+    }
+}
