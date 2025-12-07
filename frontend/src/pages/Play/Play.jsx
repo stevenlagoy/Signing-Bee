@@ -106,7 +106,7 @@ export default function Play() {
             </div>
 
             <div className={styles.startPractice}>
-                <button onClick={startPractice}>Start Practice</button>
+                <button onClick={startPractice}>Play</button>
             </div>
 
             <div>
