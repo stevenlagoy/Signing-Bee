@@ -1,3 +1,37 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.bigX {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 150px;
+  height: 150px;
+  z-index: 10;
+  animation: xPop 0.5s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes xPop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  30% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
 .wordDisplay {
   display: flex;
   justify-content: center;
@@ -5,6 +39,25 @@
   gap: 2.5rem;
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
+}
+
+.guessIndicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.guessDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: $blue;
+  transition: background-color 0.2s;
+
+  &.used {
+    background-color: red;
+  }
 }
 
 .letter {

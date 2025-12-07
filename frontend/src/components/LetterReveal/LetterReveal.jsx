@@ -8,7 +8,10 @@ export default function LetterReveal({ word, detectedLetter, onComplete, onFail 
   const [letterIndex, setLetterIndex] = useState(0);
   const [wrongLetter, setWrongLetter] = useState("");
   const [incorrectCount, setIncorrectCount] = useState(0);
-  const lastProcessedId = useRef(null);
+  const [showX, setShowX] = useState(false);
+
+  // Track revealed text like Camera tracks predictedText
+  const lastRevealedTextRef = useRef('');
 
   //reset when word changes
   useEffect(() => {
@@ -16,17 +19,14 @@ export default function LetterReveal({ word, detectedLetter, onComplete, onFail 
     setLetterIndex(0);
     setWrongLetter("");
     setIncorrectCount(0);
-    lastProcessedId.current = null;
+    setShowX(false);
+    lastRevealedTextRef.current = '';
   }, [word]);
 
-  //feedback for detected letters
+  //feedback for detected letters - mirrors Camera's text accumulation pattern
   useEffect(() => {
     if (!detectedLetter) return;
     if (letterIndex >= word.length) return;
-
-    // Prevent double-processing the same detection (handles double letters)
-    if (detectedLetter.id === lastProcessedId.current) return;
-    lastProcessedId.current = detectedLetter.id;
 
     const inputLetter = detectedLetter.letter;
     if (!inputLetter) return;
@@ -34,35 +34,49 @@ export default function LetterReveal({ word, detectedLetter, onComplete, onFail 
     const expected = word[letterIndex].toUpperCase();
     const inputLetterCaps = inputLetter.toUpperCase();
 
+    // Build current revealed text
+    const currentRevealedText = revealed
+      .map((isRevealed, i) => isRevealed ? word[i].toUpperCase() : '')
+      .join('');
+
     if (inputLetterCaps === expected) {
-      setRevealed((prevRevealed) => {
-        const copy = [...prevRevealed];
-        copy[letterIndex] = true;
-        return copy;
-      });
+      // Check if this would extend our revealed text (like Camera checks text length)
+      const newRevealedText = currentRevealedText + inputLetterCaps;
 
-      setWrongLetter("");
-      const next = letterIndex + 1;
-      setLetterIndex(next);
+      if (newRevealedText.length > lastRevealedTextRef.current.length) {
+        setRevealed((prevRevealed) => {
+          const copy = [...prevRevealed];
+          copy[letterIndex] = true;
+          return copy;
+        });
 
-      if (next >= word.length && onComplete) {
-        onComplete();
+        setWrongLetter("");
+        const next = letterIndex + 1;
+        setLetterIndex(next);
+        lastRevealedTextRef.current = newRevealedText;
+
+        if (next >= word.length && onComplete) {
+          onComplete();
+        }
       }
     } else {
       setWrongLetter(inputLetterCaps);
       const newIncorrectCount = incorrectCount + 1;
       setIncorrectCount(newIncorrectCount);
 
+      // Show X animation
+      setShowX(true);
+      setTimeout(() => setShowX(false), 500);
+
       if (newIncorrectCount >= MAX_INCORRECT_GUESSES && onFail) {
         onFail();
       }
     }
-  }, [detectedLetter, word, onComplete, onFail, letterIndex, incorrectCount]);
-
-  const remainingGuesses = MAX_INCORRECT_GUESSES - incorrectCount;
+  }, [detectedLetter, word, onComplete, onFail, letterIndex, incorrectCount, revealed]);
 
   return (
     <div className={styles.container}>
+      {showX && <img src="/assets/red-x.svg" alt="Incorrect" className={styles.bigX} />}
       <div className={styles.wordDisplay}>
         {Array.from(word).map((letter, index) => {
           let className = styles.letter;
@@ -94,9 +108,6 @@ export default function LetterReveal({ word, detectedLetter, onComplete, onFail 
               className={`${styles.guessDot} ${i < incorrectCount ? styles.used : ""}`}
             />
           ))}
-          <span className={styles.guessText}>
-            {remainingGuesses} {remainingGuesses === 1 ? "try" : "tries"} left
-          </span>
         </div>
       )}
     </div>
