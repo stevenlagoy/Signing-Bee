@@ -17,13 +17,12 @@ const DIFFICULTY_CONFIG = {
   },
   hard: {
     minLength: 8,
-    maxLength: 15,
+    maxLength: 12, // Adjusted for better API compatibility
     allowDoubleLetters: true
   }
 };
 
 const KUSH_CREATES_API = 'https://random-words-api.kushcreates.com/api';
-const RANDOM_WORD_API = 'https://random-word-api.herokuapp.com/word';
 
 const hasDoubleLetters = (word) => {
   for (let i = 0; i < word.length - 1; i++) {
@@ -46,24 +45,17 @@ const meetsConfig = (word, config) => {
 
 const fetchWordFromAPI = async (difficulty, config) => {
   const length = Math.floor(Math.random() * (config.maxLength - config.minLength + 1)) + config.minLength;
-  let response;
-
+  
   try {
-    if (difficulty === 'easy' || difficulty === 'medium') {
-      response = await fetch(`${KUSH_CREATES_API}?language=en&length=${length}`);
-    } else { // hard
-      response = await fetch(`${RANDOM_WORD_API}?length=${length}`);
-    }
-
+    const response = await fetch(`${KUSH_CREATES_API}?language=en&length=${length}`);
     if (!response.ok) throw new Error('API request failed');
+    
     const words = await response.json();
 
     if (Array.isArray(words) && words.length > 0) {
-      if (difficulty === 'easy' || difficulty === 'medium') {
-        const randomIndex = Math.floor(Math.random() * words.length);
-        return words[randomIndex].word;
-      }
-      return words[0];
+      const randomIndex = Math.floor(Math.random() * words.length);
+      // The API returns an object with a 'word' property
+      return words[randomIndex].word; 
     }
     return null;
   } catch (error) {

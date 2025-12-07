@@ -3,6 +3,7 @@
 let isLoaded = false;
 let audioContext = null;
 let audioContextInitialized = false;
+const audioCache = new Map(); // Cache to store AudioBuffer objects
 
 const BACKEND_ENDPOINT = '/get-audio'; // Endpoint for Google Cloud TTS on the backend
 
@@ -51,38 +52,44 @@ const speak = async (text, options = {}) => {
     await audioContext.resume();
   }
 
-  try {
-    const response = await fetch(BACKEND_ENDPOINT, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ word: text }), // Send the word to the backend
-    });
+  // Check if audio is already in cache
+  let audioBuffer = audioCache.get(text);
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Backend API request failed: ${response.status} - ${errorText}`);
+  if (!audioBuffer) {
+    try {
+      const response = await fetch(BACKEND_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ word: text }), // Send the word to the backend
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Backend API request failed: ${response.status} - ${errorText}`);
+      }
+
+      const audioBlob = await response.blob();
+      const arrayBuffer = await audioBlob.arrayBuffer();
+
+      audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+      audioCache.set(text, audioBuffer); // Store in cache
+    } catch (error) {
+      console.error('Failed to synthesize speech via backend:', error);
+      throw error;
     }
-
-    const audioBlob = await response.blob();
-    const arrayBuffer = await audioBlob.arrayBuffer();
-
-    const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-
-    const source = audioContext.createBufferSource();
-    source.buffer = audioBuffer;
-    source.connect(audioContext.destination);
-    source.start(0);
-
-    return new Promise((resolve) => {
-      source.onended = resolve;
-    });
-
-  } catch (error) {
-    console.error('Failed to synthesize speech via backend:', error);
-    throw error;
   }
+
+  // Play audio from buffer (either cached or newly fetched)
+  const source = audioContext.createBufferSource();
+  source.buffer = audioBuffer;
+  source.connect(audioContext.destination);
+  source.start(0);
+
+  return new Promise((resolve) => {
+    source.onended = resolve;
+  });
 };
 
 const stop = () => {
