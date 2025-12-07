@@ -65,6 +65,22 @@ export default function Play() {
     const lettersPerMinute =
         minutes > 0 ? Math.round(correctLetters / minutes) : 0;
 
+    const handleFail = async () => {
+        // Send score to leaderboard
+        try {
+            await fetch('/scores', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ score: lettersPerMinute })
+            });
+        } catch (error) {
+            console.error('Failed to submit score:', error);
+        }
+
+        // Start next round with new word
+        await nextWord();
+    };
+
     return (
         <div>
             <div className={styles.DIDContainer}>
@@ -101,6 +117,7 @@ export default function Play() {
                     word={currentWord}
                     detectedLetter={detectedLetter}
                     onComplete={nextWord}
+                    onFail={handleFail}
                 />
                 <Timer oneStart={oneStart} />
             </div>

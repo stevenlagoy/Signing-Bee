@@ -298,9 +298,6 @@ export default function WebcamSample({ onLetterDetected, oneStart = 0 }) {
                             </div>
                         </>
                     )}
-                    <div className={styles.resultText}>
-                        <strong>Text:</strong> {predictedText || ''}
-                    </div>
                 </div>
             )}
         </div>
