@@ -23,8 +23,8 @@ export default function Speaker({ muted, setMuted }) {
     //     imgAlt = "Mute audio";
     // }
 
-    imgSrc = "/speaker-on.svg";
-    imgAlt = "Mute audio";
+    let imgSrc = "/speaker-on.svg";
+    let imgAlt = "Mute audio";
     const handleRepeatWord = async () => {
         await signingBeeRound.speakCurrentWord();
     };
