@@ -9,7 +9,7 @@ export default function Leaderboard() {
 
     useEffect(() => {
         const getUsers = async () => {
-            const res = await fetch("http://localhost:4000/users");
+            const res = await fetch(`/users`);
             if (!res.ok) {
                 throw new Error(`Error fetching leaderboard: ${res.status}`);
             }
@@ -17,7 +17,7 @@ export default function Leaderboard() {
             const temp = [];
             for (let u of usersRes) {
                 const user = u;
-                user.high_score = (await (await fetch(`http://localhost:4000/scores/user/${u.id}/high`)).json()).high_score;
+                user.high_score = (await (await fetch(`/scores/user/${u.id}/high`)).json()).high_score;
                 temp.push(user);
             }
             temp.sort(function (a, b) { return b.high_score - a.high_score });

@@ -2,8 +2,18 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styles from "./Header.module.scss";
 import ThemeToggle from "../ThemeToggle";
+import LoginDropDown from "../../components/Dropdown/LoginDropDown";
+import { useLogout } from '../../hooks/useLogout.jsx'
+import { useAuthContext } from '../../hooks/useAuthContext.jsx'
 
 export default function Header() {
+  const { logout } = useLogout()
+  const { user } = useAuthContext()
+
+  const handleClick = () => {
+    logout()
+  }
+
   return (
     <header className={styles.header}>
       <Link to="/" className={styles.brand}>
@@ -14,22 +24,33 @@ export default function Header() {
         <Link to="/asl-reference" className="aslReferenceLink">
           ASL Reference
         </Link>
-        <Link to="/practice" className="practiceLink">
-          Practice
+        <Link to="/play" className="playLink">
+          Play
         </Link>
         <Link to="/about" className="aboutLink">
           About
         </Link>
       </nav>
 
-    <ThemeToggle />
+      <ThemeToggle />
+      <LoginDropDown trigger="Profile">
+          
+        {!user && (
+          <nav className={styles.navLinks}>
+            <Link to="/login">Log In</Link>
+            <div></div>
+            <Link to="/signup">Sign Up</Link>
+          </nav>
+        )}
 
-      <Link to="/profile" className={styles.profileMenu}>
-        <div className={styles.userProfile}>
-          <h2 className={styles.userName}>User Name</h2>
-          <img src="/default-pfp.svg" alt="Default user profile picture" width="50" height="50" />
-        </div>
-      </Link>
+        {user && (
+          <div>
+            <span><h3>{user.username}</h3></span>
+            <p onClick={handleClick}>Log Out</p>
+          </div>
+        )}
+
+      </LoginDropDown>
     </header>
   );
 }
