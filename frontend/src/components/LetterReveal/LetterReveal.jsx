@@ -3,15 +3,22 @@ import styles from "./LetterReveal.module.scss";
 
 const MAX_INCORRECT_GUESSES = 3;
 
-export default function LetterReveal({ word, detectedLetter, onComplete, onFail }) {
+export default function LetterReveal({ word, detectedLetter, onComplete, onFail, onCorrectLetter }) {
   const [revealed, setRevealed] = useState([]);
   const [letterIndex, setLetterIndex] = useState(0);
   const [wrongLetter, setWrongLetter] = useState("");
   const [incorrectCount, setIncorrectCount] = useState(0);
+  const [isComplete, setIsComplete] = useState(false);
+  const [isFlippingOut, setIsFlippingOut] = useState(false);
 
   // Track revealed text like Camera tracks predictedText
   const lastRevealedTextRef = useRef('');
   const lastProcessedIdRef = useRef(null);
+  const isPaused = useRef(false);
+
+  //swap audio here if we want different sounds
+  const audioCorrect = new Audio("/correct.mp3");
+  const audioWrong = new Audio("/wrong.mp3");
 
   //reset when word changes
   useEffect(() => {
@@ -19,14 +26,21 @@ export default function LetterReveal({ word, detectedLetter, onComplete, onFail 
     setLetterIndex(0);
     setWrongLetter("");
     setIncorrectCount(0);
+    setIsComplete(false);
+    setIsFlippingOut(false);
+    isPaused.current = false;
     lastRevealedTextRef.current = '';
     lastProcessedIdRef.current = null;
   }, [word]);
 
-  //feedback for detected letters - mirrors Camera's text accumulation pattern
+  //incoming letters
   useEffect(() => {
     if (!detectedLetter) return;
     if (letterIndex >= word.length) return;
+    if (isComplete || isFlippingOut) return;
+
+    //pause a moment to not immediately reprocess same letter
+    if (isPaused.current) return;
 
     // Prevent processing the same detection multiple times
     if (detectedLetter.id === lastProcessedIdRef.current) return;
@@ -49,25 +63,53 @@ export default function LetterReveal({ word, detectedLetter, onComplete, onFail 
       if (newRevealedText.length > lastRevealedTextRef.current.length) {
         lastProcessedIdRef.current = detectedLetter.id;
 
-        setRevealed((prevRevealed) => {
-          const copy = [...prevRevealed];
-          copy[letterIndex] = true;
-          return copy;
-        });
-
-        setWrongLetter("");
-        const next = letterIndex + 1;
-        setLetterIndex(next);
-        lastRevealedTextRef.current = newRevealedText;
-
-        if (next >= word.length && onComplete) {
-          onComplete();
+        if (onCorrectLetter) {
+          onCorrectLetter();
         }
+
+        audioCorrect.currentTime = 0;
+        audioCorrect.play().catch((e) => console.log("Audio play failed", e));
+
+        //question mark flip animation swap to letter
+        setIsFlippingOut(true);
+        setTimeout(() => {
+          setRevealed((prevRevealed) => {
+            const copy = [...prevRevealed];
+            copy[letterIndex] = true;
+            return copy;
+          });
+
+          setIsFlippingOut(false);
+
+          //completed letter reveal, move to next letter
+          setWrongLetter("");
+          const next = letterIndex + 1;
+          setLetterIndex(next);
+          lastRevealedTextRef.current = newRevealedText;
+
+          if (next >= word.length) {
+            setTimeout(() => {
+              setIsComplete(true);
+            }, 100);
+
+            setTimeout(() => {
+              if (onComplete) onComplete();
+            }, 1200);
+
+          } else {
+            isPaused.current = true;
+            setTimeout(() => {
+              isPaused.current = false;
+            }, 1000);
+          }
+        }, 200);
       }
     } else {
       // Mark as processed BEFORE updating state to prevent loop
       lastProcessedIdRef.current = detectedLetter.id;
 
+      audioWrong.currentTime = 0;
+      audioWrong.play().catch((e) => console.log("Audio play failed", e));
       setWrongLetter(inputLetterCaps);
 
       setIncorrectCount(prev => {
@@ -78,24 +120,30 @@ export default function LetterReveal({ word, detectedLetter, onComplete, onFail 
         return newCount;
       });
     }
-  }, [detectedLetter, word, onComplete, onFail, letterIndex, revealed]);
+  }, [detectedLetter, word, onComplete, onFail, onCorrectLetter, letterIndex, revealed, isComplete, isFlippingOut]);
 
   return (
     <div className={styles.container}>
-      <div className={styles.wordDisplay}>
+      <div className={`${styles.wordDisplay} ${isComplete ? styles.bounceComplete : ''}`}>
         {Array.from(word).map((letter, index) => {
           let className = styles.letter;
           let content;
+          let isCurrentLetter = index === letterIndex;
+          let isQuestionMark = !revealed[index] && !wrongLetter;
 
           if (revealed[index]) {
             content = letter.toUpperCase();
             className += ` ${styles.revealed}`;
-          } else if (index === letterIndex && wrongLetter) {
+          } else if (isCurrentLetter && wrongLetter) {
             content = wrongLetter;
             className += ` ${styles.incorrect}`;
           } else {
             content = "?";
             className += ` ${styles.hidden}`;
+          }
+
+          if (isCurrentLetter && isFlippingOut && isQuestionMark) {
+            className += ` ${styles.flippingOut}`;
           }
 
           return (

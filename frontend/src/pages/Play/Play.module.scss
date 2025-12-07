@@ -1,3 +1,5 @@
+@use '/src/styles/colors' as *;
+
 .DIDContainer {
   display: grid;
   grid-template-columns: auto auto auto;
@@ -31,7 +33,6 @@
   align-items: center;
   align-content: space-between;
   gap: 15px;
-  margin-top: 1rem;
 }
 
 .speaker {

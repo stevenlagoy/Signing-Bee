@@ -27,24 +27,21 @@ function Timer({ oneStart = 0 }) {
         }
     };
 
-    const handleReset = () => {
-        //reset time
-        setTime(0);
-
-        //stop time
+    //changed reset to pause
+    const handlePause = () => {
         setIsRunning(false);
         clearInterval(intervalRef.current);
     }
 
     useEffect(() => {
-        if (oneStart > 0 && !isRunning) {
+        if (oneStart > 0 && !isRunning && time === 0) {
             setIsRunning(true);
             clearInterval(intervalRef.current);
             intervalRef.current = setInterval(() => {
                 setTime(prevTime => prevTime + 10);
             }, 10);
         }
-    }, [oneStart, isRunning]);
+    }, [oneStart, isRunning, time]);
 
     //clear
     useEffect(() => {
@@ -62,7 +59,7 @@ function Timer({ oneStart = 0 }) {
         <div className={styles.timerSpacing}>
             <h1>{formattedMinutes}:{formattedSeconds}</h1>
             <button className={styles.timerStartStop} onClick={handleStartStop}>{isRunning ? 'Stop' : time === 0 ? 'Start' : 'Resume'}</button>
-            <button className={styles.timerReset} onClick={handleReset}>Reset</button>
+            <button className={styles.timerReset} onClick={handlePause}>Pause</button>
         </div>
   );
 }
