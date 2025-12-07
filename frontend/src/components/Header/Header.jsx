@@ -34,12 +34,7 @@ export default function Header() {
 
       <ThemeToggle />
       <LoginDropDown trigger="Profile">
-        <Link to="/profile" className={styles.profileMenu}>
-          <div className={styles.userProfile}>
-            <h2 className={styles.userName}>User Name</h2>
-
-          </div>
-        </Link>
+          
         {!user && (
           <nav className={styles.navLinks}>
             <Link to="/login">Log In</Link>
@@ -50,7 +45,7 @@ export default function Header() {
 
         {user && (
           <div>
-            <span>{user.email}</span>
+            <span><h3>{user.username}</h3></span>
             <p onClick={handleClick}>Log Out</p>
           </div>
         )}

@@ -2,6 +2,7 @@
   display: grid;
   grid-template-columns: auto auto auto;
   justify-content: space-between;
+  z-index: 0;
 }
 
 .introBox {

@@ -2,7 +2,7 @@
   position: relative;
   display: inline-block;
   align-self: flex-start;
-  z-index: 1000;
+  z-index: 10;
 }
 
 .button {
@@ -43,5 +43,5 @@
   border: 2px solid $black;
   border-top: none;
   border-radius: 0 0 8px 8px;
-  z-index: 1000;
+  z-index: 10;
 }

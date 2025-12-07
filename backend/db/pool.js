@@ -1,7 +1,12 @@
 import dotenv from 'dotenv';
 import pkg from 'pg';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-dotenv.config();
+// Load environment variables from `backend/env` (the project stores env there)
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.join(__dirname, '..', 'env') });
+
 const { Pool } = pkg;
 
 export const pool = new Pool({

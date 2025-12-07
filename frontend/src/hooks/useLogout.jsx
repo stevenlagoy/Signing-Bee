@@ -12,5 +12,5 @@ export const useLogout = () => {
 
     }
 
-    return {logout}
+    return logout;
 }
