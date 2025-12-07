@@ -6,19 +6,24 @@ let BACKEND_URL = 'http://localhost:8080'
 
 try 
 {
-    if (import.meta?.env?.VITE_BACKEND_URL) {
+    if (import.meta?.env?.VITE_BACKEND_URL) 
+    {
         BACKEND_URL = import.meta.env.VITE_BACKEND_URL
     }
 } 
-catch (e) {
+
+catch (e) 
+{
   
 }
 
-if (typeof process !== 'undefined' && process.env && process.env.REACT_APP_BACKEND_URL) {
+if (typeof process !== 'undefined' && process.env && process.env.REACT_APP_BACKEND_URL) 
+{
     BACKEND_URL = process.env.REACT_APP_BACKEND_URL
 }
 
-export const useSignup = () => {
+export const useSignup = () => 
+{
   const [error, setError] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const { dispatch } = useAuthContext()
@@ -28,7 +33,8 @@ export const useSignup = () => {
     setIsLoading(true)
     setError(null)
 
-    try {
+    try 
+    {
       const response = await fetch(`${BACKEND_URL}/users`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

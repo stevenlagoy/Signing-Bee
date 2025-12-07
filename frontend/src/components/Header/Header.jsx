@@ -45,7 +45,7 @@ export default function Header() {
 
         {user && (
           <div>
-            <span>{user.username}</span>
+            <span><h3>{user.username}</h3></span>
             <p onClick={handleClick}>Log Out</p>
           </div>
         )}

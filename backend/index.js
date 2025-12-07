@@ -51,11 +51,13 @@ app.post(`/users`, async (req, res) => {
 });
 
 // Login route - authenticate existing users
-app.post(`/login`, async (req, res) => {
+app.post(`/login`, async (req, res) => 
+{
   const { username, password } = req.body;
   if (!username || !password) return res.status(400).json({ error: 'Missing username or password' });
 
-  try {
+  try 
+  {
     const result = await pool.query('SELECT id, username, password, created_at FROM "Users" WHERE username = $1', [username]);
     if (result.rows.length === 0) return res.status(401).json({ error: 'Invalid username or password' });
 
@@ -66,9 +68,13 @@ app.post(`/login`, async (req, res) => {
     // Do not return the hashed password
     const { password: _pw, ...userSafe } = user;
     res.json(userSafe);
-  } catch (err) {
+    
+  } 
+  catch (err) 
+  {
     console.error(err);
     res.status(500).json({ error: 'Failed to authenticate user' });
+
   }
 });
 

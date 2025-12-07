@@ -8,13 +8,17 @@ try
 {
     if (import.meta?.env?.VITE_BACKEND_URL) {
         BACKEND_URL = import.meta.env.VITE_BACKEND_URL
+
     }
 } 
-catch (e) {
+
+catch (e) 
+{
   
 }
 
-if (typeof process !== 'undefined' && process.env && process.env.REACT_APP_BACKEND_URL) {
+if (typeof process !== 'undefined' && process.env && process.env.REACT_APP_BACKEND_URL) 
+    {
     BACKEND_URL = process.env.REACT_APP_BACKEND_URL
 }
 
@@ -29,8 +33,10 @@ export const useLogin = () => {
         setIsLoading(true)
         setError(null)
 
-        try {
-            const response = await fetch(`${BACKEND_URL}/login`, {
+        try 
+        {
+            const response = await fetch(`${BACKEND_URL}/login`, 
+            {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({username, password}),
@@ -38,7 +44,8 @@ export const useLogin = () => {
 
             const json = await response.json()
 
-            if (!response.ok) {
+            if (!response.ok) 
+            {
                 setError(json.error || 'Login failed')
                 setIsLoading(false)
                 return
@@ -54,7 +61,11 @@ export const useLogin = () => {
 
             // redirect to home page after login
             navigate('/')
-        } catch (err) {
+
+        } 
+
+        catch (err) 
+        {
             setError('Network error')
             setIsLoading(false)
         }
