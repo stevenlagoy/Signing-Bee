@@ -1,0 +1,51 @@
+.wordDisplay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.letter {
+  position: relative;
+  min-width: 1.2ch;
+  text-align: center;
+  font-family: "Fira Sans", sans-serif;
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1;
+  text-transform: uppercase;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -0.35rem;
+    width: 80%;
+    height: 4px;
+    border-radius: 999px;
+    background-color: $blue;
+  }
+}
+
+.hidden {
+  color: $blue;
+}
+
+.revealed {
+  color: green;
+
+  &::after {
+    background-color: green;
+  }
+}
+
+.incorrect {
+  color: red;
+
+  &::after {
+    background-color: red;
+  }
+}
