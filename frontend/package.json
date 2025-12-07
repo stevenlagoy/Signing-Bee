@@ -24,7 +24,7 @@
   "scripts": {
     "dev": "vite --open",
     "build": "vite build",
-    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test": "jest",
     "test:ci": "jest --runInBand",
@@ -77,7 +77,7 @@
     "@vitejs/plugin-react": "^5.1.0",
     "babel-jest": "^30.2.0",
     "cypress": "^15.5.0",
-    "eslint": "^8.43.0",
+    "eslint": "^9.39.1",
     "eslint-config-react-app": "^7.0.1",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^30.2.0",
