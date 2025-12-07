@@ -33,7 +33,7 @@ export default function Header() {
       </nav>
 
       <ThemeToggle />
-      <LoginDropDown trigger="Profile">
+      <LoginDropDown trigger={user ? user.username : "Login"}>
           
         {!user && (
           <nav className={styles.navLinks}>

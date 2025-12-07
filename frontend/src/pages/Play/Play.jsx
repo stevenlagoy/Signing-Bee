@@ -111,7 +111,7 @@ export default function Play() {
                     <p>Iframe Here</p>
                 </Dropdown> */}
             </div>
-            <Timer oneStart={oneStart} />
+            <Timer oneStart={oneStart} isPaused={isPaused} />
             <div className={styles.speakerScore}>
                 <div className={styles.speaker}>
                     <Speaker muted={muted} setMuted={setMuted} />
@@ -126,7 +126,7 @@ export default function Play() {
             <div className={styles.startPractice}>
                 <button onClick={startPractice}>Play</button>
                 {oneStart > 0 && (
-                    <button onClick={togglePause}>
+                    <button onClick={togglePause} style={{ marginLeft: '20px' }}>
                         {isPaused ? 'Resume' : 'Pause'}
                     </button>
                 )}
