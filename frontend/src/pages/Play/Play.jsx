@@ -7,29 +7,17 @@ import Leaderboard from "../../components/Leaderboard";
 import { useState, useEffect } from "react";
 import LetterReveal from "../../components/LetterReveal";
 import Speaker from "../../components/Speaker";
-
-const temp_words = ["ELDER", "APPLE", "DISH"]; //add more words here for now
+import signingBeeRound from "../../services/signingBeeRound";
 
 export default function Play() {
-    //get random starting word
-    const [currentWord, setCurrentWord] = useState(
-        temp_words[Math.floor(Math.random() * temp_words.length)]
-    );
+    const [currentWord, setCurrentWord] = useState("");
     //most recent accepted letter
     const [detectedLetter, setDetectedLetter] = useState(null);
     //counter to trigger start
     const [oneStart, setOneStart] = useState(0);
 
-    const nextWord = () => {
-        let newWord = currentWord;
-
-        //get random word with no consecutive repeats
-        if (temp_words.length > 1) {
-            while (newWord === currentWord) {
-                newWord = temp_words[Math.floor(Math.random() * temp_words.length)];
-            }
-        }
-
+    const nextWord = async () => {
+        const newWord = await signingBeeRound.nextRound();
         setCurrentWord(newWord);
         setDetectedLetter(null);
     };
@@ -44,9 +32,11 @@ export default function Play() {
     };
 
     //button to start both timer and camera
-    const startPractice = () => {
+    const startPractice = async () => {
         setCorrectLetters(0);
         setElapsedSeconds(0);
+        const word = await signingBeeRound.startRound();
+        setCurrentWord(word);
         setOneStart((prev) => prev + 1);
     };
 

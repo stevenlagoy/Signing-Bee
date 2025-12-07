@@ -5,6 +5,7 @@ import cors from "cors";
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { pool } from "./db/pool.js";
+import textToSpeech from "@google-cloud/text-to-speech";
 import dotenv from 'dotenv';
 
 // Load env file from backend/env so running from project root still picks it up
@@ -14,6 +15,9 @@ dotenv.config({ path: path.join(__dirname, 'env') });
 const app = express();
 // __dirname is available above
 const frontendPath = path.join(__dirname, '../frontend/dist');
+
+// Google Cloud Text-to-Speech Client
+const client = new textToSpeech.TextToSpeechClient();
 
 // Middleware to parse JSON
 app.use(express.json());
@@ -51,13 +55,11 @@ app.post(`/users`, async (req, res) => {
 });
 
 // Login route - authenticate existing users
-app.post(`/login`, async (req, res) => 
-{
+app.post(`/login`, async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) return res.status(400).json({ error: 'Missing username or password' });
 
-  try 
-  {
+  try {
     const result = await pool.query('SELECT id, username, password, created_at FROM "Users" WHERE username = $1', [username]);
     if (result.rows.length === 0) return res.status(401).json({ error: 'Invalid username or password' });
 
@@ -68,10 +70,9 @@ app.post(`/login`, async (req, res) =>
     // Do not return the hashed password
     const { password: _pw, ...userSafe } = user;
     res.json(userSafe);
-    
-  } 
-  catch (err) 
-  {
+
+  }
+  catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to authenticate user' });
 
@@ -154,6 +155,21 @@ app.get(`/scores/user/:userId/high`, async (req, res) => {
     console.error(err);
     res.status(500).json({ error: 'Failed to fetch high score' });
   }
+});
+
+// Get audio file for speaking a word
+app.post('/get-audio', async (req, res) => {
+  const word = String(req.body.word || "").trim();
+  if (!word) return res.status(400).send("Missing word");
+
+  const [response] = await client.synthesizeSpeech({
+    input: { text: word },
+    voice: { languageCode: "en-US", name: "en-US-Neural2-A" },
+    audioConfig: { audioEncoding: "MP3" },
+  });
+
+  res.setHeader("Content-Type", "audio/mpeg");
+  res.send(response.audioContent); // this is the audio file bytes
 });
 
 app.use(express.static(frontendPath));
