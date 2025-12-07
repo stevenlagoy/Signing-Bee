@@ -12,6 +12,7 @@ export default function LetterReveal({ word, detectedLetter, onComplete, onFail 
 
   // Track revealed text like Camera tracks predictedText
   const lastRevealedTextRef = useRef('');
+  const lastProcessedIdRef = useRef(null);
 
   //reset when word changes
   useEffect(() => {
@@ -21,12 +22,16 @@ export default function LetterReveal({ word, detectedLetter, onComplete, onFail 
     setIncorrectCount(0);
     setShowX(false);
     lastRevealedTextRef.current = '';
+    lastProcessedIdRef.current = null;
   }, [word]);
 
   //feedback for detected letters - mirrors Camera's text accumulation pattern
   useEffect(() => {
     if (!detectedLetter) return;
     if (letterIndex >= word.length) return;
+
+    // Prevent processing the same detection multiple times
+    if (detectedLetter.id === lastProcessedIdRef.current) return;
 
     const inputLetter = detectedLetter.letter;
     if (!inputLetter) return;
@@ -44,6 +49,8 @@ export default function LetterReveal({ word, detectedLetter, onComplete, onFail 
       const newRevealedText = currentRevealedText + inputLetterCaps;
 
       if (newRevealedText.length > lastRevealedTextRef.current.length) {
+        lastProcessedIdRef.current = detectedLetter.id;
+
         setRevealed((prevRevealed) => {
           const copy = [...prevRevealed];
           copy[letterIndex] = true;
@@ -60,19 +67,23 @@ export default function LetterReveal({ word, detectedLetter, onComplete, onFail 
         }
       }
     } else {
+      // Mark as processed BEFORE updating state to prevent loop
+      lastProcessedIdRef.current = detectedLetter.id;
+
       setWrongLetter(inputLetterCaps);
-      const newIncorrectCount = incorrectCount + 1;
-      setIncorrectCount(newIncorrectCount);
+      setIncorrectCount(prev => {
+        const newCount = prev + 1;
+        if (newCount >= MAX_INCORRECT_GUESSES && onFail) {
+          onFail();
+        }
+        return newCount;
+      });
 
       // Show X animation
       setShowX(true);
       setTimeout(() => setShowX(false), 500);
-
-      if (newIncorrectCount >= MAX_INCORRECT_GUESSES && onFail) {
-        onFail();
-      }
     }
-  }, [detectedLetter, word, onComplete, onFail, letterIndex, incorrectCount, revealed]);
+  }, [detectedLetter, word, onComplete, onFail, letterIndex, revealed]);
 
   return (
     <div className={styles.container}>
