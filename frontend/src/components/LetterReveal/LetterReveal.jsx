@@ -8,7 +8,6 @@ export default function LetterReveal({ word, detectedLetter, onComplete, onFail 
   const [letterIndex, setLetterIndex] = useState(0);
   const [wrongLetter, setWrongLetter] = useState("");
   const [incorrectCount, setIncorrectCount] = useState(0);
-  const [bigXMarks, setBigXMarks] = useState([]);
 
   // Track revealed text like Camera tracks predictedText
   const lastRevealedTextRef = useRef('');
@@ -20,7 +19,6 @@ export default function LetterReveal({ word, detectedLetter, onComplete, onFail 
     setLetterIndex(0);
     setWrongLetter("");
     setIncorrectCount(0);
-    setBigXMarks([]);
     lastRevealedTextRef.current = '';
     lastProcessedIdRef.current = null;
   }, [word]);
@@ -72,17 +70,6 @@ export default function LetterReveal({ word, detectedLetter, onComplete, onFail 
 
       setWrongLetter(inputLetterCaps);
 
-      // Add a new big X mark with animation
-      const markId = Date.now();
-      setBigXMarks(marks => [...marks, { id: markId, animate: true }]);
-
-      // Remove animation after it completes
-      setTimeout(() => {
-        setBigXMarks(marks =>
-          marks.map(mark => mark.id === markId ? { ...mark, animate: false } : mark)
-        );
-      }, 600);
-
       setIncorrectCount(prev => {
         const newCount = prev + 1;
         if (newCount >= MAX_INCORRECT_GUESSES && onFail) {
@@ -95,15 +82,6 @@ export default function LetterReveal({ word, detectedLetter, onComplete, onFail 
 
   return (
     <div className={styles.container}>
-      {bigXMarks.map((mark, index) => (
-        <img
-          key={mark.id}
-          src="/assets/red-x.svg"
-          alt="Incorrect"
-          className={`${styles.bigX} ${mark.animate ? styles.animating : styles.static}`}
-          style={{ zIndex: 10 + index }}
-        />
-      ))}
       <div className={styles.wordDisplay}>
         {Array.from(word).map((letter, index) => {
           let className = styles.letter;
