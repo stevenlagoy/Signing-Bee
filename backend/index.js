@@ -6,6 +6,7 @@ import cors from "cors";
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { pool } from "./db/pool.js";
+import textToSpeech from "@google-cloud/text-to-speech";
 
 dotenv.config();
 
@@ -13,6 +14,9 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const frontendPath = path.join(__dirname, '../frontend/dist');
+
+// Google Cloud Text-to-Speech Client
+const client = new textToSpeech.TextToSpeechClient();
 
 // Middleware to parse JSON
 app.use(express.json());
@@ -125,6 +129,21 @@ app.get('/scores/user/:userId/high', async (req, res) => {
     console.error(err);
     res.status(500).json({ error: 'Failed to fetch high score' });
   }
+});
+
+// Get audio file for speaking a word
+app.post('/get-audio', async (req, res) => {
+  const word = String(req.body.word || "").trim();
+  if (!word) return res.status(400).send("Missing word");
+
+  const [response] = await client.synthesizeSpeech({
+    input: { text: word },
+    voice: { languageCode: "en-US", name: "en-US-Neural2-A" },
+    audioConfig: { audioEncoding: "MP3" },
+  });
+
+  res.setHeader("Content-Type", "audio/mpeg");
+  res.send(response.audioContent); // this is the audio file bytes
 });
 
 app.use(express.static(frontendPath));

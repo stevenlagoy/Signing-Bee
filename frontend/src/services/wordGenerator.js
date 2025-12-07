@@ -22,6 +22,7 @@ const DIFFICULTY_CONFIG = {
   }
 };
 
+const KUSH_CREATES_API = 'https://random-words-api.kushcreates.com/api';
 const RANDOM_WORD_API = 'https://random-word-api.herokuapp.com/word';
 
 const hasDoubleLetters = (word) => {
@@ -32,10 +33,6 @@ const hasDoubleLetters = (word) => {
 };
 
 const meetsConfig = (word, config) => {
-  // if (!word || word.length < config.minLength || word.length > config.maxLength) {
-  //   return false;
-  // }
-
   if (!config.allowDoubleLetters && hasDoubleLetters(word)) {
     return false;
   }
@@ -47,26 +44,42 @@ const meetsConfig = (word, config) => {
   return true;
 };
 
-const fetchWordFromAPI = async () => {
+const fetchWordFromAPI = async (difficulty, config) => {
+  const length = Math.floor(Math.random() * (config.maxLength - config.minLength + 1)) + config.minLength;
+  let response;
+
   try {
-    const response = await fetch(RANDOM_WORD_API);
+    if (difficulty === 'easy' || difficulty === 'medium') {
+      response = await fetch(`${KUSH_CREATES_API}?language=en&length=${length}`);
+    } else { // hard
+      response = await fetch(`${RANDOM_WORD_API}?length=${length}`);
+    }
+
     if (!response.ok) throw new Error('API request failed');
     const words = await response.json();
-    return Array.isArray(words) && words.length > 0 ? words[0] : null;
+
+    if (Array.isArray(words) && words.length > 0) {
+      if (difficulty === 'easy' || difficulty === 'medium') {
+        const randomIndex = Math.floor(Math.random() * words.length);
+        return words[randomIndex].word;
+      }
+      return words[0];
+    }
+    return null;
   } catch (error) {
     console.warn('Failed to fetch from word API:', error);
     return null;
   }
 };
 
-const getRandomWord = async ({ difficulty = DEFAULT_DIFFICULTY, previousWord = '' } = {}) => {
-  const config = DIFFICULTY_CONFIG[difficulty] || DIFFICULTY_CONFIG[DEFAULT_DIFFICULTY];
+const getRandomWord = async ({ difficulty = 'easy', previousWord = '' } = {}) => {
+  const config = DIFFICULTY_CONFIG[difficulty] || DIFFICULTY_CONFIG['easy'];
 
   let attempts = 0;
   const maxAttempts = 10;
 
   while (attempts < maxAttempts) {
-    const word = await fetchWordFromAPI();
+    const word = await fetchWordFromAPI(difficulty, config);
 
     if (word && meetsConfig(word, config) && word.toLowerCase() !== previousWord.toLowerCase()) {
       return word.toLowerCase();

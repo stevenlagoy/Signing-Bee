@@ -1,10 +1,12 @@
-import { KokoroTTS } from 'kokoro-js';
+// Frontend Text-to-Speech service using Google Cloud TTS via backend.
 
-let ttsEngine = null;
+let ttsEngine = null; // No longer a KokoroTTS engine, but keeping variable for consistency
 let isLoading = false;
 let isLoaded = false;
 let audioContext = null;
 let audioContextInitialized = false;
+
+const BACKEND_ENDPOINT = '/get-audio'; // Endpoint for Google Cloud TTS on the backend
 
 const initAudioContext = () => {
   if (audioContextInitialized) return;
@@ -20,6 +22,7 @@ const initAudioContext = () => {
   audioContextInitialized = true;
 };
 
+// Initialize AudioContext on user interaction
 if (typeof window !== 'undefined') {
   const events = ['click', 'touchstart', 'keydown'];
   events.forEach(event => {
@@ -28,26 +31,11 @@ if (typeof window !== 'undefined') {
 }
 
 const load = async () => {
-  if (isLoaded) return;
-  if (isLoading) {
-    while (isLoading) {
-      await new Promise(resolve => setTimeout(resolve, 100));
-    }
-    return;
-  }
-
-  try {
-    isLoading = true;
-    ttsEngine = await KokoroTTS.from_pretrained('onnx-community/Kokoro-82M-ONNX', {
-      device: 'auto'
-    });
-    isLoaded = true;
-  } catch (error) {
-    console.error('Failed to load Kokoro TTS:', error);
-    throw error;
-  } finally {
-    isLoading = false;
-  }
+  // With backend integration, the TTS engine doesn't need to be loaded client-side.
+  // This function can remain as a placeholder or be adapted for any client-side setup
+  // that might be needed in the future (e.g., fetching available voices from backend).
+  isLoaded = true; // Mark as loaded since it's ready to make API calls
+  return Promise.resolve();
 };
 
 const speak = async (text, options = {}) => {
@@ -66,18 +54,23 @@ const speak = async (text, options = {}) => {
   }
 
   try {
-    const result = await ttsEngine.generate(text, {
-      voice: options.voice || 'af_sarah', // 'af_bella' has highest quality but 'af_sarah' was trained for education use cases likely indicating clearer pronunciation
-      speed: options.speed ?? .8,       // slower for clarity
-      pitch: options.pitch ?? 1.0,
-      volume: options.volume ?? 1.5
+    const response = await fetch(BACKEND_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ word: text }), // Send the word to the backend
     });
 
-    const sampleRate = result.sampling_rate || 24000;
-    const audioData = result.audio;
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Backend API request failed: ${response.status} - ${errorText}`);
+    }
 
-    const audioBuffer = audioContext.createBuffer(1, audioData.length, sampleRate);
-    audioBuffer.getChannelData(0).set(audioData);
+    const audioBlob = await response.blob();
+    const arrayBuffer = await audioBlob.arrayBuffer();
+
+    const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
 
     const source = audioContext.createBufferSource();
     source.buffer = audioBuffer;
@@ -87,38 +80,24 @@ const speak = async (text, options = {}) => {
     return new Promise((resolve) => {
       source.onended = resolve;
     });
+
   } catch (error) {
-    console.error('Failed to synthesize speech:', error);
+    console.error('Failed to synthesize speech via backend:', error);
     throw error;
   }
 };
 
 const stop = () => {
-  if (ttsEngine) {
-    ttsEngine.stop?.();
-  }
-};
-
-const getAvailableVoices = () => {
-  return [
-    'af_sky',
-    'af_bella',
-    'af_sarah',
-    'af_nicole',
-    'am_adam',
-    'am_michael',
-    'bf_emma',
-    'bf_isabella',
-    'bm_george',
-    'bm_lewis'
-  ];
+  // Stopping speech might be handled by interrupting the current AudioContext source
+  // For simplicity, we'll leave it as a placeholder as direct interruption of
+  // an ongoing AudioBufferSourceNode requires more complex state management.
+  console.warn("Stop functionality not fully implemented for Google Cloud TTS via backend.");
 };
 
 const textToSpeech = {
   load,
   speak,
   stop,
-  getAvailableVoices,
   isLoaded: () => isLoaded
 };
 
