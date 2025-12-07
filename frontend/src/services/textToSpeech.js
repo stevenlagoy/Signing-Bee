@@ -1,7 +1,5 @@
 // Frontend Text-to-Speech service using Google Cloud TTS via backend.
 
-let ttsEngine = null; // No longer a KokoroTTS engine, but keeping variable for consistency
-let isLoading = false;
 let isLoaded = false;
 let audioContext = null;
 let audioContextInitialized = false;
