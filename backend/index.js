@@ -1,16 +1,18 @@
 import express from 'express';
-import dotenv from 'dotenv';
 import pkg from 'pg';
 import bcrypt from 'bcrypt';
 import cors from "cors";
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { pool } from "./db/pool.js";
+import dotenv from 'dotenv';
 
-dotenv.config();
+// Load env file from backend/env so running from project root still picks it up
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.join(__dirname, 'env') });
 
 const app = express();
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+// __dirname is available above
 const frontendPath = path.join(__dirname, '../frontend/dist');
 
 // Middleware to parse JSON
@@ -45,6 +47,28 @@ app.post(`/users`, async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to create user' });
+  }
+});
+
+// Login route - authenticate existing users
+app.post(`/login`, async (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password) return res.status(400).json({ error: 'Missing username or password' });
+
+  try {
+    const result = await pool.query('SELECT id, username, password, created_at FROM "Users" WHERE username = $1', [username]);
+    if (result.rows.length === 0) return res.status(401).json({ error: 'Invalid username or password' });
+
+    const user = result.rows[0];
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) return res.status(401).json({ error: 'Invalid username or password' });
+
+    // Do not return the hashed password
+    const { password: _pw, ...userSafe } = user;
+    res.json(userSafe);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to authenticate user' });
   }
 });
 
