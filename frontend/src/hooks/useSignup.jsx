@@ -4,13 +4,11 @@ import { useNavigate } from 'react-router-dom'
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
 
-if (typeof process !== 'undefined' && process.env && process.env.REACT_APP_BACKEND_URL) 
-{
+if (typeof process !== 'undefined' && process.env && process.env.REACT_APP_BACKEND_URL) {
   BACKEND_URL = process.env.REACT_APP_BACKEND_URL
 }
 
-export const useSignup = () => 
-{
+export const useSignup = () => {
   const [error, setError] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const { dispatch } = useAuthContext()
@@ -20,9 +18,9 @@ export const useSignup = () =>
     setIsLoading(true)
     setError(null)
 
-    try 
-    {
-      const response = await fetch(`${BACKEND_URL}/users`, {
+    try {
+      // const response = await fetch(`${BACKEND_URL}/users`, {
+      const response = await fetch(`/users`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
@@ -42,9 +40,8 @@ export const useSignup = () =>
 
       setIsLoading(false)
       navigate('/')
-    } 
-    catch (err) 
-    {
+    }
+    catch (err) {
       setError('Network error')
       setIsLoading(false)
     }
@@ -52,4 +49,3 @@ export const useSignup = () =>
 
   return { signup, isLoading, error };
 }
-    
