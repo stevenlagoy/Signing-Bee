@@ -17,9 +17,9 @@ export default function Play() {
                     faster signing! There is no time limit and you can play for as long as you want.
                 </p>
                 </div>
-                <Dropdown trigger="Wiki" className={styles.wiki}>
+                {/* <Dropdown trigger="Wiki" className={styles.wiki}>
                     <p>Iframe Here</p>
-                </Dropdown>
+                </Dropdown> */}
             </div>
 
             <div>
