@@ -2,25 +2,24 @@
 
 %timerButtons
 {
-    //color
-    background-color: $orange;
-
-    //size
-    width: 100px;
-    height: 50px;
     
-    //font
-    font: bold 1rem "Fira Sans", sans-serif;
-    font-size: 20px;
+    all: unset; 
     
-    //round corners
-    border-radius: 5%;
+    background: $blue;
+    color: white;
+    
+    padding: 10px 20px;
+    border-radius: 1000px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    box-shadow: 0 3px 5px rgba(0,0,0,0.25);
 
     &:hover {
-        background-color: orangered;
+        background-color: $orange;
     }
     &:active {
-        background-color: orangered;
+        background-color: $orange;
     }
 }
 
@@ -39,8 +38,10 @@
 
 .timerStartStop{
     @extend %timerButtons;
+    display: none;
 }
 
 .timerReset{
     @extend %timerButtons;
+    display: none;
 }

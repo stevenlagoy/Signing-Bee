@@ -36,12 +36,15 @@ export default function Play() {
 
     //makes each letter added unique to prevent immediate reuse into next letter
     const handleLetterDetected = (letter) => {
-        setCorrectLetters((prev) => prev + 1);
         setDetectedLetter({
             letter,
             id: Date.now(),
         });
     };
+
+    const handleCorrectLetter = () => {
+        setCorrectLetters((prev) => prev + 1);
+    }
 
     //button to start both timer and camera
     const startPractice = () => {
@@ -90,7 +93,7 @@ export default function Play() {
                     <p>Iframe Here</p>
                 </Dropdown>
             </div>
-
+            <Timer oneStart={oneStart} />
             <div className={styles.speakerScore}>
                 <div className={styles.speaker}>
                     <Speaker muted={muted} setMuted={setMuted} />
@@ -111,8 +114,9 @@ export default function Play() {
                     word={currentWord}
                     detectedLetter={detectedLetter}
                     onComplete={nextWord}
+                    onCorrectLetter={handleCorrectLetter}
                 />
-                <Timer oneStart={oneStart} />
+                
             </div>
 
             <WebcamSample onLetterDetected={handleLetterDetected} oneStart={oneStart} />
