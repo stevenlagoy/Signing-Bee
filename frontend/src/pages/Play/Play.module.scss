@@ -12,7 +12,7 @@
   grid-template-columns: auto auto 1fr auto auto;
   gap: 20px;
   align-items: start;
-  min-height: 250px;
+  min-height: 120px;
 }
 
 .timerBox {
@@ -97,19 +97,19 @@
   cursor: pointer;
   font-size: 1.1rem;
   font-weight: bold;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
   font-family: 'Inter', sans-serif;
 
   &:hover:not(:disabled) {
     background: darken($blue, 5%);
     transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
   }
 
   &:active:not(:disabled) {
     transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
 
   &:disabled {
@@ -140,7 +140,7 @@
   border-radius: 1000px;
   min-width: 70px;
   text-align: center;
-  box-shadow: 0 3px 5px rgba(0,0,0,0.25);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.25);
 }
 
 .scoreContainer {
@@ -187,9 +187,12 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.1);
   }

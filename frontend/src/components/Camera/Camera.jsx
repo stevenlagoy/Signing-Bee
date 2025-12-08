@@ -174,17 +174,20 @@ export default function WebcamSample({ onLetterDetected, oneStart = 0 }) {
         }
 
         return () => {
-            // Cleanup only when video stops
-            if (!video) {
-                if (cameraRef.current) {
-                    cameraRef.current.stop();
-                    cameraRef.current = null;
-                }
-                if (holisticRef.current) {
-                    holisticRef.current.close();
-                    holisticRef.current = null;
-                }
+            // Always tear down camera + holistic so they don't leak across remounts
+            if (cameraRef.current) {
+                cameraRef.current.stop();
+                cameraRef.current = null;
             }
+            if (holisticRef.current) {
+                holisticRef.current.close();
+                holisticRef.current = null;
+            }
+            const stream = videoElement.current?.video?.srcObject || videoElement.current?.stream;
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+            isRecordingRef.current = false;
         };
     }, [video, onResults]);
 
