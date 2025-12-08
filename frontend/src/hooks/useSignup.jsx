@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useAuthContext } from './useAuthContext'
 import { useNavigate } from 'react-router-dom'
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
+let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
 
 if (typeof process !== 'undefined' && process.env && process.env.REACT_APP_BACKEND_URL) {
   BACKEND_URL = process.env.REACT_APP_BACKEND_URL
