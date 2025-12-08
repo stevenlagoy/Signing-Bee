@@ -10,7 +10,7 @@ const LETTER_THRESHOLDS = {
     'A': 0.50,
     'B': 0.80,
     'C': 0.70,
-    'D': 0.70,
+    'D': 0.58,
     'E': 0.70,
     'F': 0.30,
     'G': 0.20,
@@ -22,10 +22,10 @@ const LETTER_THRESHOLDS = {
     'M': 0.50,
     'N': 0.50,
     'O': 0.7,
-    'P': 0.75,
+    'P': 0.25,
     'Q': 0.70,
     'R': 0.45,
-    'S': 0.75,
+    'S': 0.40,
     'T': 0.75,
     'U': 0.40,
     'V': 0.65,
@@ -53,7 +53,7 @@ const aslModelLandmarks = {
         }
 
         try {
-            console.log('[aslModelLandmarks] Loading TensorFlow.js model...');
+            // console.log('[aslModelLandmarks] Loading TensorFlow.js model...');
 
             const tf = window.tf;
             if (!tf) {
@@ -66,9 +66,9 @@ const aslModelLandmarks = {
             model = await tf.loadLayersModel(MODEL_URL);
             isLoaded = true;
 
-            console.log('[aslModelLandmarks] ✅ Model loaded successfully');
-            console.log('[aslModelLandmarks] Input shape:', model.inputs[0].shape);
-            console.log('[aslModelLandmarks] Output shape:', model.outputs[0].shape);
+            // console.log('[aslModelLandmarks] ✅ Model loaded successfully');
+            // console.log('[aslModelLandmarks] Input shape:', model.inputs[0].shape);
+            // console.log('[aslModelLandmarks] Output shape:', model.outputs[0].shape);
         } catch (error) {
             console.error('[aslModelLandmarks] ❌ Failed to load model:', error);
             throw error;
@@ -127,14 +127,14 @@ const aslModelLandmarks = {
                 // Can't type the same letter twice in a row - must show a different letter first
                 if (predictedClass === lastAddedLetter) {
                     // Same as last added letter - can't start tracking it yet
-                    console.log(`[aslModelLandmarks] ⛔ Can't type "${predictedClass}" again - must change letter first`);
+                    // console.log(`[aslModelLandmarks] ⛔ Can't type "${predictedClass}" again - must change letter first`);
                     currentHighConfidenceLetter = '';
                     thresholdReachedTime = 0;
                 } else if (predictedClass !== currentHighConfidenceLetter) {
                     // Different letter from what we're tracking - start new tracking
                     currentHighConfidenceLetter = predictedClass;
                     thresholdReachedTime = now;
-                    console.log(`[aslModelLandmarks] 🎯 Started tracking: ${predictedClass}`);
+                    // console.log(`[aslModelLandmarks] 🎯 Started tracking: ${predictedClass}`);
                 } else {
                     // Same letter maintained above threshold - check if enough time passed
                     const holdDuration = now - thresholdReachedTime;
@@ -142,7 +142,7 @@ const aslModelLandmarks = {
                     if (holdDuration >= DEBOUNCE_MS) {
                         // Held long enough - add the letter
                         currentText += predictedClass;
-                        console.log(`[aslModelLandmarks] ✅ Added letter: ${predictedClass} (held ${holdDuration}ms)`);
+                        // console.log(`[aslModelLandmarks] ✅ Added letter: ${predictedClass} (held ${holdDuration}ms)`);
 
                         // Reset tracking to require another hold
                         currentHighConfidenceLetter = '';
@@ -153,7 +153,7 @@ const aslModelLandmarks = {
             } else {
                 // Confidence dropped below threshold - reset tracking
                 if (currentHighConfidenceLetter) {
-                    console.log(`[aslModelLandmarks] ⚠️ Confidence dropped, reset tracking for: ${currentHighConfidenceLetter}`);
+                    // console.log(`[aslModelLandmarks] ⚠️ Confidence dropped, reset tracking for: ${currentHighConfidenceLetter}`);
                     currentHighConfidenceLetter = '';
                     thresholdReachedTime = 0;
                 }

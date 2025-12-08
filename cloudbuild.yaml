@@ -5,16 +5,20 @@ substitutions:
 
 steps:
   - name: gcr.io/cloud-builders/docker
+    entrypoint: 'bash'
+    args: ['-c', 'docker pull $_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO/latest || exit 0']
+  - name: gcr.io/cloud-builders/docker
     args: [
       'build',
+      '--cache-from', '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO/latest',
       '-t', '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO/$SHORT_SHA',
+      '-t', '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO/latest',
       '.'
     ]
   - name: gcr.io/cloud-builders/docker
-    args: [
-      'push',
-      '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO/$SHORT_SHA'
-    ]
+    args: ['push', '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO/$SHORT_SHA']
+  - name: gcr.io/cloud-builders/docker
+    args: ['push', '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO/latest']
   - name: gcr.io/google.com/cloudsdktool/cloud-sdk
     entrypoint: gcloud
     args: [
@@ -28,3 +32,4 @@ options:
   logging: CLOUD_LOGGING_ONLY
 images:
   - $_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO/$SHORT_SHA
+  - $_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO/latest

@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
 import Webcam from 'react-webcam';
-import { Holistic, HAND_CONNECTIONS, POSE_CONNECTIONS, FACEMESH_TESSELATION } from '@mediapipe/holistic';
+import { Holistic, HAND_CONNECTIONS } from '@mediapipe/holistic';
 import { Camera } from '@mediapipe/camera_utils';
 import { drawConnectors, drawLandmarks } from '@mediapipe/drawing_utils';
 // import aslModel from '../../services/aslModel'; // Complex model not working yet
@@ -8,7 +8,7 @@ import { drawConnectors, drawLandmarks } from '@mediapipe/drawing_utils';
 import aslModel from '../../services/aslModelLandmarks'; // Landmark-based model (better)
 import styles from "./Camera.module.scss";
 
-export default function WebcamSample() {
+export default function WebcamSample({ onLetterDetected, onDetectionStatus, oneStart = 0 }) {
 
     const [video, setVideo] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
@@ -23,6 +23,7 @@ export default function WebcamSample() {
     const cameraRef = useRef(null);
     const frameCountRef = useRef(0);
     const isRecordingRef = useRef(false);
+    const lastTextRef = useRef('');
 
     const videoConstraints = {
         width: 640,
@@ -30,12 +31,32 @@ export default function WebcamSample() {
         facingMode: "user"
     }
 
+    //sends each newly accepted letter to be handled
+    useEffect(() => {
+        if (!onLetterDetected) return;
+
+        const prev = lastTextRef.current || '';
+        const curr = predictedText || '';
+
+        if (curr.length > prev.length) {
+            const newPart = curr.slice(prev.length);
+
+            for (const ch of newPart) {
+                if (ch && ch !== ' ') {
+                    onLetterDetected(ch);
+                }
+            }
+        }
+
+        lastTextRef.current = curr;
+    }, [predictedText, onLetterDetected]);
+
     useEffect(() => {
         // Load the ASL model when component mounts
-        console.log('[Camera] Loading ASL model...');
+        // console.log('[Camera] Loading ASL model...');
         aslModel.loadModel()
             .then(() => {
-                console.log('[Camera] ASL model loaded successfully');
+                // console.log('[Camera] ASL model loaded successfully');
                 setModelLoaded(true);
             })
             .catch(err => {
@@ -48,81 +69,86 @@ export default function WebcamSample() {
         isRecordingRef.current = isRecording;
     }, [isRecording]);
 
+    useEffect(() => {
+        if (oneStart > 0) {
+            startCam();
+            startRecording();
+        }
+    }, [oneStart]);
+
+    // Ensure recording starts once model is ready (in case Play was pressed before load finished)
+    useEffect(() => {
+        if (video && modelLoaded && !isRecordingRef.current) {
+            startRecording();
+        }
+    }, [video, modelLoaded]);
+
     const onResults = useCallback(async (results) => {
         if (!canvasRef.current) return;
+        frameCountRef.current += 1;
+        if (frameCountRef.current % 2 === 0) { // Throttle drawing to every other frame with modulus 2
+            const canvasCtx = canvasRef.current.getContext('2d');
+            canvasCtx.save();
+            canvasCtx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 
-        const canvasCtx = canvasRef.current.getContext('2d');
-        canvasCtx.save();
-        canvasCtx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+            // Draw left hand
+            if (results.leftHandLandmarks) {
+                drawConnectors(canvasCtx, results.leftHandLandmarks, HAND_CONNECTIONS, {
+                    color: '#CC0000',
+                    lineWidth: 5
+                });
+                drawLandmarks(canvasCtx, results.leftHandLandmarks, {
+                    color: '#00FF00',
+                    lineWidth: 2,
+                    radius: 5
+                });
+            }
 
-        // Draw face mesh
-        if (results.faceLandmarks) {
-            drawConnectors(canvasCtx, results.faceLandmarks, FACEMESH_TESSELATION, {
-                color: '#C0C0C070',
-                lineWidth: 1
-            });
+            // Draw right hand
+            if (results.rightHandLandmarks) {
+                drawConnectors(canvasCtx, results.rightHandLandmarks, HAND_CONNECTIONS, {
+                    color: '#0000CC',
+                    lineWidth: 5
+                });
+                drawLandmarks(canvasCtx, results.rightHandLandmarks, {
+                    color: '#FF0000',
+                    lineWidth: 2,
+                    radius: 5
+                });
+            }
+
+            canvasCtx.restore();
         }
 
-        // Draw pose
-        if (results.poseLandmarks) {
-            drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS, {
-                color: '#00FF00',
-                lineWidth: 4
-            });
-            drawLandmarks(canvasCtx, results.poseLandmarks, {
-                color: '#FF0000',
-                lineWidth: 2,
-                radius: 4
-            });
-        }
-
-        // Draw left hand
-        if (results.leftHandLandmarks) {
-            drawConnectors(canvasCtx, results.leftHandLandmarks, HAND_CONNECTIONS, {
-                color: '#CC0000',
-                lineWidth: 5
-            });
-            drawLandmarks(canvasCtx, results.leftHandLandmarks, {
-                color: '#00FF00',
-                lineWidth: 2,
-                radius: 5
-            });
-        }
-
-        // Draw right hand
-        if (results.rightHandLandmarks) {
-            drawConnectors(canvasCtx, results.rightHandLandmarks, HAND_CONNECTIONS, {
-                color: '#0000CC',
-                lineWidth: 5
-            });
-            drawLandmarks(canvasCtx, results.rightHandLandmarks, {
-                color: '#FF0000',
-                lineWidth: 2,
-                radius: 5
-            });
-        }
-
-        canvasCtx.restore();
-
-        // Run prediction when recording (throttle to every 15 frames = ~2x per second at 30fps)
+        // Run prediction when recording (throttle to every 30 frames = ~1x per second at 30fps)
         if (isRecordingRef.current && modelLoaded) {
-            frameCountRef.current += 1;
-
-            if (frameCountRef.current % 15 === 0) {
+            if (frameCountRef.current % 30 === 0) {
                 try {
                     const prediction = await aslModel.predictFromLandmarks(results);
 
                     if (prediction) {
+                        const nextLetter = prediction.letter || '';
+                        const nextConfidence = prediction.confidence || 0;
+
                         setPredictedText(prediction.text || '');
-                        setCurrentLetter(prediction.letter || '');
-                        setConfidence(prediction.confidence || 0);
+                        setCurrentLetter(nextLetter);
+                        setConfidence(nextConfidence);
+
+                        if (onDetectionStatus) {
+                            onDetectionStatus({
+                                letter: nextLetter,
+                                confidence: nextConfidence,
+                                threshold: aslModel.getLetterThreshold(nextLetter),
+                                holdProgress: prediction.holdProgress || 0
+                            });
+                        }
                     }
                 } catch (error) {
                     console.error('[Camera] Prediction failed:', error);
                 }
             }
         }
-    }, [modelLoaded]);
+    }, [modelLoaded, onDetectionStatus]);
 
     useEffect(() => {
         if (video && videoElement.current?.video) {
@@ -135,12 +161,13 @@ export default function WebcamSample() {
                 });
 
                 holistic.setOptions({
+                    enableFaceGeometry: false,
                     modelComplexity: 1,
-                    smoothLandmarks: true,
+                    smoothLandmarks: false,
                     enableSegmentation: false,
                     smoothSegmentation: false,
                     minDetectionConfidence: 0.7,
-                    minTrackingConfidence: 0.7,
+                    minTrackingConfidence: 0.6,
                     refineFaceLandmarks: false
                 });
 
@@ -156,8 +183,8 @@ export default function WebcamSample() {
                             await holisticRef.current.send({ image: videoElement.current.video });
                         }
                     },
-                    width: 640,
-                    height: 480
+                    width: videoConstraints.width,
+                    height: videoConstraints.height
                 });
 
                 camera.start();
@@ -166,17 +193,20 @@ export default function WebcamSample() {
         }
 
         return () => {
-            // Cleanup only when video stops
-            if (!video) {
-                if (cameraRef.current) {
-                    cameraRef.current.stop();
-                    cameraRef.current = null;
-                }
-                if (holisticRef.current) {
-                    holisticRef.current.close();
-                    holisticRef.current = null;
-                }
+            // Always tear down camera + holistic so they don't leak across remounts
+            if (cameraRef.current) {
+                cameraRef.current.stop();
+                cameraRef.current = null;
             }
+            if (holisticRef.current) {
+                holisticRef.current.close();
+                holisticRef.current = null;
+            }
+            const stream = videoElement.current?.video?.srcObject || videoElement.current?.stream;
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+            isRecordingRef.current = false;
         };
     }, [video, onResults]);
 
@@ -185,7 +215,7 @@ export default function WebcamSample() {
             console.error('[Camera] Cannot start recording - model not loaded');
             return;
         }
-        console.log('[Camera] Starting real-time recognition');
+        // console.log('[Camera] Starting real-time recognition');
         setIsRecording(true);
         isRecordingRef.current = true;
         aslModel.clearText();
@@ -193,13 +223,14 @@ export default function WebcamSample() {
         setCurrentLetter('');
         setConfidence(0);
         frameCountRef.current = 0;
+        lastTextRef.current = '';
     };
 
     const stopRecording = () => {
         setIsRecording(false);
         isRecordingRef.current = false;
-        console.log('[Camera] Stopped real-time recognition');
-        console.log('[Camera] Final text:', predictedText);
+        // console.log('[Camera] Stopped real-time recognition');
+        // console.log('[Camera] Final text:', predictedText);
     };
 
     const startCam = () => {
@@ -224,6 +255,14 @@ export default function WebcamSample() {
         setPredictedText('');
         setCurrentLetter('');
         setConfidence(0);
+        if (onDetectionStatus) {
+            onDetectionStatus({
+                letter: '',
+                confidence: 0,
+                threshold: aslModel.confidenceThreshold,
+                holdProgress: 0
+            });
+        }
     }
 
     return (
@@ -248,8 +287,8 @@ export default function WebcamSample() {
                         <Webcam audio={false} ref={videoElement} videoConstraints={videoConstraints} />
                         <canvas
                             ref={canvasRef}
-                            width={640}
-                            height={480}
+                            width={videoConstraints.width}
+                            height={videoConstraints.height}
                             className={styles.canvas}
                         />
                     </>
@@ -289,9 +328,6 @@ export default function WebcamSample() {
                             </div>
                         </>
                     )}
-                    <div className={styles.resultText}>
-                        <strong>Text:</strong> {predictedText || ''}
-                    </div>
                 </div>
             )}
         </div>

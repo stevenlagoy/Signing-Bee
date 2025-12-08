@@ -2,6 +2,7 @@
   position: relative;
   display: inline-block;
   align-self: flex-start;
+  z-index: 1;
 }
 
 .button {
@@ -17,12 +18,14 @@
   padding: 8px 40px;
   cursor: pointer;
   &:hover { filter: brightness(1.1); }
+  z-index: 1;
 }
 
 .chevron {
   width: 15px;
   height: 15px;
   transition: transform 0.2s ease;
+  z-index: 10;
 }
 
 .rotated {
@@ -30,7 +33,7 @@
 }
 
 .menu {
-  position: absolute;
+  position: relative;
   text-align: center;
   top: 100%;
   left: 0;
@@ -39,4 +42,5 @@
   border: 2px solid $orange;
   border-top: none;
   border-radius: 0 0 8px 8px;
+  z-index: 1;
 }
