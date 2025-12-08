@@ -7,6 +7,7 @@ import { Navigate } from "react-router-dom";
 import LetterReveal from "../../components/LetterReveal";
 import Speaker from "../../components/Speaker";
 import signingBeeRound from "../../services/signingBeeRound";
+import aslModelLandmarks from "../../services/aslModelLandmarks";
 import { useAuthContext } from "../../hooks/useAuthContext";
 
 export default function Play() {
@@ -53,6 +54,12 @@ export default function Play() {
     const [correctLetters, setCorrectLetters] = useState(0);
     const [elapsedSeconds, setElapsedSeconds] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
+    const [detectionStatus, setDetectionStatus] = useState({
+        letter: '',
+        confidence: 0,
+        threshold: aslModelLandmarks.confidenceThreshold,
+        holdProgress: 0,
+    });
 
     useEffect(() => {
         const media = document.querySelectorAll("audio, video");
@@ -152,6 +159,29 @@ export default function Play() {
                 )}
             </div>
 
+            <div className={styles.detectionPanel}>
+                <div className={styles.detectionRow}>
+                    <div className={styles.detectionLabel}>Detecting</div>
+                    <div className={styles.detectionLetter}>
+                        {detectionStatus.letter || '—'}
+                    </div>
+                </div>
+                <div className={styles.detectionBar}>
+                    <div
+                        className={`${styles.detectionFill} ${detectionStatus.confidence >= detectionStatus.threshold ? styles.detectionLocked : ''}`}
+                        style={{ width: `${Math.min(detectionStatus.confidence * 100, 100)}%` }}
+                    />
+                    <div
+                        className={styles.detectionThreshold}
+                        style={{ left: `${(detectionStatus.threshold || 0) * 100}%` }}
+                    />
+                </div>
+                <div className={styles.detectionMeta}>
+                    <span>Confidence: {(detectionStatus.confidence * 100).toFixed(1)}%</span>
+                    <span>Need: {(detectionStatus.threshold * 100).toFixed(0)}%</span>
+                </div>
+            </div>
+
             <div>
                 <LetterReveal
                     word={currentWord}
@@ -173,7 +203,11 @@ export default function Play() {
                 )}
 
                 {!isPaused && oneStart > 0 && (
-                    <WebcamSample onLetterDetected={handleLetterDetected} oneStart={oneStart} />
+                    <WebcamSample
+                        onLetterDetected={handleLetterDetected}
+                        onDetectionStatus={setDetectionStatus}
+                        oneStart={oneStart}
+                    />
                 )}
             </div>
         </div>
