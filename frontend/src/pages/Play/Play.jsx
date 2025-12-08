@@ -159,29 +159,6 @@ export default function Play() {
                 )}
             </div>
 
-            <div className={styles.detectionPanel}>
-                <div className={styles.detectionRow}>
-                    <div className={styles.detectionLabel}>Detecting</div>
-                    <div className={styles.detectionLetter}>
-                        {detectionStatus.letter || '—'}
-                    </div>
-                </div>
-                <div className={styles.detectionBar}>
-                    <div
-                        className={`${styles.detectionFill} ${detectionStatus.confidence >= detectionStatus.threshold ? styles.detectionLocked : ''}`}
-                        style={{ width: `${Math.min(detectionStatus.confidence * 100, 100)}%` }}
-                    />
-                    <div
-                        className={styles.detectionThreshold}
-                        style={{ left: `${(detectionStatus.threshold || 0) * 100}%` }}
-                    />
-                </div>
-                <div className={styles.detectionMeta}>
-                    <span>Confidence: {(detectionStatus.confidence * 100).toFixed(1)}%</span>
-                    <span>Need: {(detectionStatus.threshold * 100).toFixed(0)}%</span>
-                </div>
-            </div>
-
             <div>
                 <LetterReveal
                     word={currentWord}
@@ -203,11 +180,38 @@ export default function Play() {
                 )}
 
                 {!isPaused && oneStart > 0 && (
-                    <WebcamSample
-                        onLetterDetected={handleLetterDetected}
-                        onDetectionStatus={setDetectionStatus}
-                        oneStart={oneStart}
-                    />
+                    <div className={styles.cameraLayout}>
+                        <div className={styles.detectionPanel}>
+                            <div className={styles.detectionRow}>
+                                <div className={styles.detectionLabel}>Detecting</div>
+                                <div className={styles.detectionLetter}>
+                                    {detectionStatus.letter || '—'}
+                                </div>
+                            </div>
+                            <div className={styles.detectionBar}>
+                                <div
+                                    className={`${styles.detectionFill} ${detectionStatus.confidence >= detectionStatus.threshold ? styles.detectionLocked : ''}`}
+                                    style={{ width: `${Math.min(detectionStatus.confidence * 100, 100)}%` }}
+                                />
+                                <div
+                                    className={styles.detectionThreshold}
+                                    style={{ left: `${(detectionStatus.threshold || 0) * 100}%` }}
+                                />
+                            </div>
+                            <div className={styles.detectionMeta}>
+                                <span>Confidence: {(detectionStatus.confidence * 100).toFixed(1)}%</span>
+                                <span>Need: {(detectionStatus.threshold * 100).toFixed(0)}%</span>
+                            </div>
+                        </div>
+
+                        <div className={styles.cameraWrapper}>
+                            <WebcamSample
+                                onLetterDetected={handleLetterDetected}
+                                onDetectionStatus={setDetectionStatus}
+                                oneStart={oneStart}
+                            />
+                        </div>
+                    </div>
                 )}
             </div>
         </div>
