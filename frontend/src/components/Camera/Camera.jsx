@@ -76,6 +76,13 @@ export default function WebcamSample({ onLetterDetected, onDetectionStatus, oneS
         }
     }, [oneStart]);
 
+    // Ensure recording starts once model is ready (in case Play was pressed before load finished)
+    useEffect(() => {
+        if (video && modelLoaded && !isRecordingRef.current) {
+            startRecording();
+        }
+    }, [video, modelLoaded]);
+
     const onResults = useCallback(async (results) => {
         if (!canvasRef.current) return;
         frameCountRef.current += 1;

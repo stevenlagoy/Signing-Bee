@@ -90,13 +90,13 @@
 .cameraLayout {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  gap: 18px;
-  margin-top: 18px;
+  align-items: center;
+  gap: 14px;
+  margin-top: 8px;
 }
 
 .cameraWrapper {
-  transform: translateX(10px);
+  transform: translateX(12px);
 }
 
 .detectionPanel {
