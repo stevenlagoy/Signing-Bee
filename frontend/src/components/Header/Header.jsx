@@ -44,9 +44,9 @@ export default function Header() {
         )}
 
         {user && (
-          <div>
+          <div className={styles.logoutContainer}>
             <span><h3>{user.username}</h3></span>
-            <p onClick={handleClick}>Log Out</p>
+            <button onClick={handleClick} className={styles.logoutButton}>Log Out</button>
           </div>
         )}
 
