@@ -81,7 +81,10 @@ export default function Play() {
             await fetch('/scores', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ score: lettersPerMinute })
+                body: JSON.stringify({
+                    user: user.id,
+                    value: lettersPerMinute
+                })
             });
         } catch (error) {
             console.error('Failed to submit score:', error);
@@ -97,39 +100,46 @@ export default function Play() {
     };
 
     return (
-        <div>
-            <div className={styles.DIDContainer}>
+        <div className={styles.pageContainer}>
+            <div className={styles.topRow}>
                 <Leaderboard />
-                <div className={styles.introBox}>
-                    <h1>Play</h1>
-                    <p>
+                <div className={styles.mainContent}>
+                    <h1 className={styles.pageTitle}>Play</h1>
+                    <p className={styles.description}>
                         You will be shown a word and must sign each letter. You will earn more points for
                         faster signing! There is no time limit and you can play for as long as you want.
                     </p>
-                </div>
-                {/* <Dropdown trigger="Wiki" className={styles.wiki}>
-                    <p>Iframe Here</p>
-                </Dropdown> */}
-            </div>
-            <Timer oneStart={oneStart} isPaused={isPaused} />
-            <div className={styles.speakerScore}>
-                <div className={styles.speaker}>
-                    <Speaker muted={muted} setMuted={setMuted} />
-                </div>
 
-                <div className={styles.scoreContainer}>
-                    <span className={styles.scoreLabel}>Score</span>
-                    <div className={styles.score}>{lettersPerMinute}</div>
-                </div>
-            </div>
+                    {oneStart === 0 && (
+                        <div className={styles.instructions}>
+                            <h3>How to Play:</h3>
+                            <ul>
+                                <li>Click "Play" to start</li>
+                                <li>Sign each letter using ASL</li>
+                                <li>Hold signs clearly for recognition</li>
+                                <li>Complete words to earn points</li>
+                            </ul>
+                        </div>
+                    )}
 
-            <div className={styles.startPractice}>
-                <button onClick={startPractice}>Play</button>
-                {oneStart > 0 && (
-                    <button onClick={togglePause} style={{ marginLeft: '20px' }}>
-                        {isPaused ? 'Resume' : 'Pause'}
-                    </button>
-                )}
+                    <div className={styles.statsBar}>
+                        <Timer oneStart={oneStart} isPaused={isPaused} />
+                        <div className={styles.scoreContainer}>
+                            <span className={styles.scoreLabel}>Score</span>
+                            <div className={styles.score}>{lettersPerMinute}</div>
+                        </div>
+                    </div>
+
+                    <div className={styles.controlsBar}>
+                        <Speaker muted={muted} setMuted={setMuted} />
+                        <button onClick={startPractice} className={styles.playButton}>Play</button>
+                        {oneStart > 0 && (
+                            <button onClick={togglePause} className={styles.pauseButton}>
+                                {isPaused ? 'Resume' : 'Pause'}
+                            </button>
+                        )}
+                    </div>
+                </div>
             </div>
 
             <div>
@@ -140,12 +150,22 @@ export default function Play() {
                     onFail={handleFail}
                     onCorrectLetter={handleCorrectLetter}
                 />
-
             </div>
 
-            {!isPaused && (
-                <WebcamSample onLetterDetected={handleLetterDetected} oneStart={oneStart} />
-            )}
+            <div className={styles.cameraSection}>
+                {oneStart === 0 && (
+                    <div className={styles.readyPrompt}>
+                        <div className={styles.readyIcon}>📹</div>
+                        <h2>Ready to Sign?</h2>
+                        <p>Make sure your camera is positioned properly and you have good lighting.</p>
+                        <p>Click the Play button above to begin!</p>
+                    </div>
+                )}
+
+                {!isPaused && oneStart > 0 && (
+                    <WebcamSample onLetterDetected={handleLetterDetected} oneStart={oneStart} />
+                )}
+            </div>
         </div>
     );
 }

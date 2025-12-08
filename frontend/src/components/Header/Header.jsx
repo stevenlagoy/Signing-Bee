@@ -7,7 +7,7 @@ import { useLogout } from '../../hooks/useLogout.jsx'
 import { useAuthContext } from '../../hooks/useAuthContext.jsx'
 
 export default function Header() {
-  const { logout } = useLogout()
+  const logout = useLogout()
   const { user } = useAuthContext()
 
   const handleClick = () => {
