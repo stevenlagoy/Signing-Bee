@@ -12,7 +12,7 @@
   grid-template-columns: auto auto 1fr auto auto;
   gap: 20px;
   align-items: start;
-  min-height: 120px;
+  min-height: 250px;
 }
 
 .timerBox {
@@ -101,15 +101,20 @@
   transition: all 0.3s ease;
   font-family: 'Inter', sans-serif;
 
-  &:hover {
+  &:hover:not(:disabled) {
     background: darken($blue, 5%);
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(0,0,0,0.25);
   }
 
-  &:active {
+  &:active:not(:disabled) {
     transform: translateY(0);
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 }
 

@@ -138,7 +138,13 @@ export default function Play() {
 
             <div className={styles.controlsBar}>
                 <Speaker muted={muted} setMuted={setMuted} />
-                <button onClick={startPractice} className={styles.playButton}>Play</button>
+                <button
+                    onClick={startPractice}
+                    className={styles.playButton}
+                    disabled={oneStart > 0}
+                >
+                    Play
+                </button>
                 {oneStart > 0 && (
                     <button onClick={togglePause} className={styles.pauseButton}>
                         {isPaused ? 'Resume' : 'Pause'}
