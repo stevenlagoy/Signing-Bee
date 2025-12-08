@@ -8,7 +8,7 @@ import { drawConnectors, drawLandmarks } from '@mediapipe/drawing_utils';
 import aslModel from '../../services/aslModelLandmarks'; // Landmark-based model (better)
 import styles from "./Camera.module.scss";
 
-export default function WebcamSample({ onLetterDetected, oneStart = 0 }) {
+export default function WebcamSample({ onLetterDetected, onDetectionStatus, oneStart = 0 }) {
 
     const [video, setVideo] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
@@ -76,6 +76,13 @@ export default function WebcamSample({ onLetterDetected, oneStart = 0 }) {
         }
     }, [oneStart]);
 
+    // Ensure recording starts once model is ready (in case Play was pressed before load finished)
+    useEffect(() => {
+        if (video && modelLoaded && !isRecordingRef.current) {
+            startRecording();
+        }
+    }, [video, modelLoaded]);
+
     const onResults = useCallback(async (results) => {
         if (!canvasRef.current) return;
         frameCountRef.current += 1;
@@ -120,16 +127,28 @@ export default function WebcamSample({ onLetterDetected, oneStart = 0 }) {
                     const prediction = await aslModel.predictFromLandmarks(results);
 
                     if (prediction) {
+                        const nextLetter = prediction.letter || '';
+                        const nextConfidence = prediction.confidence || 0;
+
                         setPredictedText(prediction.text || '');
-                        setCurrentLetter(prediction.letter || '');
-                        setConfidence(prediction.confidence || 0);
+                        setCurrentLetter(nextLetter);
+                        setConfidence(nextConfidence);
+
+                        if (onDetectionStatus) {
+                            onDetectionStatus({
+                                letter: nextLetter,
+                                confidence: nextConfidence,
+                                threshold: aslModel.getLetterThreshold(nextLetter),
+                                holdProgress: prediction.holdProgress || 0
+                            });
+                        }
                     }
                 } catch (error) {
                     console.error('[Camera] Prediction failed:', error);
                 }
             }
         }
-    }, [modelLoaded]);
+    }, [modelLoaded, onDetectionStatus]);
 
     useEffect(() => {
         if (video && videoElement.current?.video) {
@@ -174,17 +193,20 @@ export default function WebcamSample({ onLetterDetected, oneStart = 0 }) {
         }
 
         return () => {
-            // Cleanup only when video stops
-            if (!video) {
-                if (cameraRef.current) {
-                    cameraRef.current.stop();
-                    cameraRef.current = null;
-                }
-                if (holisticRef.current) {
-                    holisticRef.current.close();
-                    holisticRef.current = null;
-                }
+            // Always tear down camera + holistic so they don't leak across remounts
+            if (cameraRef.current) {
+                cameraRef.current.stop();
+                cameraRef.current = null;
             }
+            if (holisticRef.current) {
+                holisticRef.current.close();
+                holisticRef.current = null;
+            }
+            const stream = videoElement.current?.video?.srcObject || videoElement.current?.stream;
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+            isRecordingRef.current = false;
         };
     }, [video, onResults]);
 
@@ -233,6 +255,14 @@ export default function WebcamSample({ onLetterDetected, oneStart = 0 }) {
         setPredictedText('');
         setCurrentLetter('');
         setConfidence(0);
+        if (onDetectionStatus) {
+            onDetectionStatus({
+                letter: '',
+                confidence: 0,
+                threshold: aslModel.confidenceThreshold,
+                holdProgress: 0
+            });
+        }
     }
 
     return (
@@ -298,9 +328,6 @@ export default function WebcamSample({ onLetterDetected, oneStart = 0 }) {
                             </div>
                         </>
                     )}
-                    <div className={styles.resultText}>
-                        <strong>Text:</strong> {predictedText || ''}
-                    </div>
                 </div>
             )}
         </div>

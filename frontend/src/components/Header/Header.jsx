@@ -7,7 +7,7 @@ import { useLogout } from '../../hooks/useLogout.jsx'
 import { useAuthContext } from '../../hooks/useAuthContext.jsx'
 
 export default function Header() {
-  const { logout } = useLogout()
+  const logout = useLogout()
   const { user } = useAuthContext()
 
   const handleClick = () => {
@@ -33,7 +33,7 @@ export default function Header() {
       </nav>
 
       <ThemeToggle />
-      <LoginDropDown trigger="Profile">
+      <LoginDropDown trigger={user ? user.username : "Login"}>
           
         {!user && (
           <nav className={styles.navLinks}>
@@ -44,9 +44,9 @@ export default function Header() {
         )}
 
         {user && (
-          <div>
+          <div className={styles.logoutContainer}>
             <span><h3>{user.username}</h3></span>
-            <p onClick={handleClick}>Log Out</p>
+            <button onClick={handleClick} className={styles.logoutButton}>Log Out</button>
           </div>
         )}
 

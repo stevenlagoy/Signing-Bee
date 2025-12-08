@@ -22,7 +22,7 @@ const DIFFICULTY_CONFIG = {
   }
 };
 
-const KUSH_CREATES_API = 'https://random-words-api.kushcreates.com/api';
+const DATAMUSE_API = 'https://api.datamuse.com/words';
 
 const hasDoubleLetters = (word) => {
   for (let i = 0; i < word.length - 1; i++) {
@@ -45,17 +45,38 @@ const meetsConfig = (word, config) => {
 
 const fetchWordFromAPI = async (difficulty, config) => {
   const length = Math.floor(Math.random() * (config.maxLength - config.minLength + 1)) + config.minLength;
-  
+
+  // Create a wildcard pattern for the desired length (e.g., "????" for 4 letters)
+  const pattern = '?'.repeat(length);
+
   try {
-    const response = await fetch(`${KUSH_CREATES_API}?language=en&length=${length}`);
+    // Request words matching the pattern with frequency metadata
+    // md=f returns frequency data (higher = more common)
+    const response = await fetch(`${DATAMUSE_API}?sp=${pattern}&md=f&max=1000`);
     if (!response.ok) throw new Error('API request failed');
-    
+
     const words = await response.json();
 
     if (Array.isArray(words) && words.length > 0) {
+      // Filter words with frequency data (common words) and sort by frequency
+      const commonWords = words
+        .filter(item => item.tags && item.tags.some(tag => tag.startsWith('f:')))
+        .map(item => ({
+          word: item.word,
+          frequency: parseFloat(item.tags.find(tag => tag.startsWith('f:')).substring(2))
+        }))
+        .sort((a, b) => b.frequency - a.frequency);
+
+      if (commonWords.length > 0) {
+        // Pick from the top 30% most common words to ensure quality
+        const topWords = commonWords.slice(0, Math.max(1, Math.floor(commonWords.length * 0.3)));
+        const randomIndex = Math.floor(Math.random() * topWords.length);
+        return topWords[randomIndex].word;
+      }
+
+      // Fallback: pick a random word from all results
       const randomIndex = Math.floor(Math.random() * words.length);
-      // The API returns an object with a 'word' property
-      return words[randomIndex].word; 
+      return words[randomIndex].word;
     }
     return null;
   } catch (error) {
