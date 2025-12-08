@@ -16,9 +16,23 @@ export default function LetterReveal({ word, detectedLetter, onComplete, onFail,
   const lastProcessedIdRef = useRef(null);
   const isPaused = useRef(false);
 
-  //swap audio here if we want different sounds
-  const audioCorrect = new Audio("/correct.mp3");
-  const audioWrong = new Audio("/wrong.mp3");
+  // Keep audio instances stable so we don't re-request the mp3s on every render
+  const audioCorrectRef = useRef(null);
+  const audioWrongRef = useRef(null);
+
+  useEffect(() => {
+    audioCorrectRef.current = new Audio("/correct.mp3");
+    audioWrongRef.current = new Audio("/wrong.mp3");
+
+    return () => {
+      [audioCorrectRef.current, audioWrongRef.current].forEach((audio) => {
+        if (audio) {
+          audio.pause();
+          audio.currentTime = 0;
+        }
+      });
+    };
+  }, []);
 
   //reset when word changes
   useEffect(() => {
@@ -67,8 +81,10 @@ export default function LetterReveal({ word, detectedLetter, onComplete, onFail,
           onCorrectLetter();
         }
 
-        audioCorrect.currentTime = 0;
-        audioCorrect.play().catch((e) => console.log("Audio play failed", e));
+        if (audioCorrectRef.current) {
+          audioCorrectRef.current.currentTime = 0;
+          audioCorrectRef.current.play().catch((e) => console.log("Audio play failed", e));
+        }
 
         //question mark flip animation swap to letter
         setIsFlippingOut(true);
@@ -108,8 +124,10 @@ export default function LetterReveal({ word, detectedLetter, onComplete, onFail,
       // Mark as processed BEFORE updating state to prevent loop
       lastProcessedIdRef.current = detectedLetter.id;
 
-      audioWrong.currentTime = 0;
-      audioWrong.play().catch((e) => console.log("Audio play failed", e));
+      if (audioWrongRef.current) {
+        audioWrongRef.current.currentTime = 0;
+        audioWrongRef.current.play().catch((e) => console.log("Audio play failed", e));
+      }
       setWrongLetter(inputLetterCaps);
 
       setIncorrectCount(prev => {
