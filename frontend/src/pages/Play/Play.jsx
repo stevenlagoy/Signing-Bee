@@ -101,45 +101,49 @@ export default function Play() {
 
     return (
         <div className={styles.pageContainer}>
-            <div className={styles.topRow}>
+            <div className={styles.topSection}>
                 <Leaderboard />
-                <div className={styles.mainContent}>
-                    <h1 className={styles.pageTitle}>Play</h1>
-                    <p className={styles.description}>
+
+                <div className={styles.timerBox}>
+                    <Timer oneStart={oneStart} isPaused={isPaused} />
+                </div>
+
+                <div className={styles.introBox}>
+                    <h1>Play</h1>
+                    <p>
                         You will be shown a word and must sign each letter. You will earn more points for
                         faster signing! There is no time limit and you can play for as long as you want.
                     </p>
+                </div>
 
-                    {oneStart === 0 && (
-                        <div className={styles.instructions}>
-                            <h3>How to Play:</h3>
-                            <ul>
-                                <li>Click "Play" to start</li>
-                                <li>Sign each letter using ASL</li>
-                                <li>Hold signs clearly for recognition</li>
-                                <li>Complete words to earn points</li>
-                            </ul>
-                        </div>
-                    )}
-
-                    <div className={styles.statsBar}>
-                        <Timer oneStart={oneStart} isPaused={isPaused} />
-                        <div className={styles.scoreContainer}>
-                            <span className={styles.scoreLabel}>Score</span>
-                            <div className={styles.score}>{lettersPerMinute}</div>
-                        </div>
-                    </div>
-
-                    <div className={styles.controlsBar}>
-                        <Speaker muted={muted} setMuted={setMuted} />
-                        <button onClick={startPractice} className={styles.playButton}>Play</button>
-                        {oneStart > 0 && (
-                            <button onClick={togglePause} className={styles.pauseButton}>
-                                {isPaused ? 'Resume' : 'Pause'}
-                            </button>
-                        )}
+                <div className={styles.scoreBox}>
+                    <div className={styles.scoreContainer}>
+                        <span className={styles.scoreLabel}>Score</span>
+                        <div className={styles.score}>{lettersPerMinute}</div>
                     </div>
                 </div>
+
+                {oneStart === 0 && (
+                    <div className={styles.instructions}>
+                        <h3>How to Play:</h3>
+                        <ul>
+                            <li>Click "Play" to start</li>
+                            <li>Sign each letter using ASL</li>
+                            <li>Hold signs clearly for recognition</li>
+                            <li>Complete words to earn points</li>
+                        </ul>
+                    </div>
+                )}
+            </div>
+
+            <div className={styles.controlsBar}>
+                <Speaker muted={muted} setMuted={setMuted} />
+                <button onClick={startPractice} className={styles.playButton}>Play</button>
+                {oneStart > 0 && (
+                    <button onClick={togglePause} className={styles.pauseButton}>
+                        {isPaused ? 'Resume' : 'Pause'}
+                    </button>
+                )}
             </div>
 
             <div>
