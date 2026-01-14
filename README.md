@@ -1,5 +1,7 @@
 # Signing Bee
-ASL learning game site with gesture recognition.
+ASL learning platform incorporating real-time gesture recognition.
+<br>
+[<b>signingbee.xyz</b>](signingbee.xyz)
 
 PFW Fall 2025
 <br>
